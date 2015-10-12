@@ -60,12 +60,12 @@ public class WindowLogin extends JFrame implements ActionListener{
 			passwordField.setText("");
 		}else{
 			Connection conection = new Connection();
-			User user = conection.starConnection(userField.getText(), passwordField.getPassword().toString());
+			User user = conection.starConnection(userField.getText(), passwordField.getText());
 			if(user == null){
 				new JOptionPane().showMessageDialog(this, "Usuário ou senha incorreto");
 			}else{
 				dispose();
-				//fazer outra tela
+				new WindowListFriends(user);
 			}
 		}		
 	}

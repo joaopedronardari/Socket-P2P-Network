@@ -15,10 +15,21 @@ public class Connection {
 		 try{
 			Scanner sc = new Scanner(new File("usuarios.txt"));
 			while(sc.hasNextLine()){
-				String[] line = sc.nextLine().split("|");
-				if(line[0].equals(user) && line[1].equals(password)){
+				String[] line = sc.nextLine().split("_");
+				if(line[0].equals(username) && line[1].equals(password)){
 					user = new User(username, password);
 					user.setConnect(true);
+					Server.addUser(user);
+					String[] friends = line[2].split(" ");
+					for(int i = 0; i < friends.length; i++){
+						User usr = new User(friends[i]);
+						//verificar se é necessário
+						if(Server.isConnect(usr)){
+							usr.setConnect(true);
+						}
+						user.getListFriends().add(usr);
+					}
+					return user;
 				}
 			}
 		}catch(FileNotFoundException e){
