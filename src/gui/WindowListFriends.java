@@ -2,14 +2,22 @@ package gui;
 
 import java.awt.Container;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import entity.User;
 import socket.Server;
@@ -39,7 +47,7 @@ public class WindowListFriends extends JFrame {
 		
 		JButton button = new JButton("Conversar");
 		button.setEnabled(false);
-		button.addActionListener(new ActionListener(){
+		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				new WindowTalk(usr,selected);
@@ -49,7 +57,7 @@ public class WindowListFriends extends JFrame {
 
 		JList<User> friends = new JList<User>(listModel);
 		friends.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		friends.addListSelectionListener(new ListSelectionListener(){
+		friends.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e){
 				if(!e.getValueIsAdjusting()){

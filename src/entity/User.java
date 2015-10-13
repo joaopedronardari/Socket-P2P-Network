@@ -76,7 +76,7 @@ public class User implements Comparable<User> {
 	@Override
 	public String toString(){
 		String status = "offline";
-		if(this.isConnect()) status = "online"
-		return this.getUserName +" " +status;
+		if(this.isConnect()) status = "online";
+		return this.getUserName() +" " +status;
 	}
 }
