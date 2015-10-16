@@ -22,11 +22,16 @@ import javax.swing.event.ListSelectionListener;
 import entity.User;
 import socket.Server;
 
-public class WindowListFriends extends JFrame {
+public class WindowListFriends extends JFrame implements ActionListener,ListSelectionListener{
 
+	JList<User> friends;
+	JButton button;
+	User selected;
+	User usr;
+	
 	public WindowListFriends(User usr) {
 		super("Veja quem está online");
-		
+		this.usr = usr;
 		Container window = getContentPane();
 		window.setLayout(new GridLayout(usr.getListFriends().size(), 2,10,10));
 		List<User> listFriends = usr.getListFriends();
@@ -45,28 +50,13 @@ public class WindowListFriends extends JFrame {
 			listModel.addElement(listFriends.get(i));
 		}
 		
-		JButton button = new JButton("Conversar");
+		button = new JButton("Conversar");
 		button.setEnabled(false);
-		button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e){
-				new WindowTalk(usr,selected);
-			}
+		button.addActionListener(this);
 
-		});
-
-		JList<User> friends = new JList<User>(listModel);
+		friends = new JList<User>(listModel);
 		friends.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		friends.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e){
-				if(!e.getValueIsAdjusting()){
-					User selected = friends.getSelectedValue();
-					if(selected != null && !button.isEnabled()) button.setEnabled(true);
-					else if (selected == null || !selected.isConnect()) button.setEnabled(false); 
-				}
-			}
-		});
+		friends.addListSelectionListener(this);
 
 		window.add(friends);
 		window.add(new JScrollPane(friends));
@@ -84,5 +74,20 @@ public class WindowListFriends extends JFrame {
 		} catch (IOException e) {
 			System.out.println("IOExecption");
 		}
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		if(!e.getValueIsAdjusting()){
+			selected = friends.getSelectedValue();
+			if(selected != null && !button.isEnabled() && selected.isConnect()) button.setEnabled(true);
+			else if (selected == null || !selected.isConnect()) button.setEnabled(false); 
+		}
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		new WindowTalk(usr,selected);
 	}
 }
