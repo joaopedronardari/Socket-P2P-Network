@@ -1,26 +1,26 @@
 package entity;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
-import socket.Server;
 
-
-public class User implements Comparable<User>, Runnable {
+public class User implements Comparable<User> {
 
 	private String userName;
 	private String password; 
 	private boolean isConnect;
 	private List<User> listFriends;
 	private String ip;
-	private final int TIMEWAIT = 1000;
-	private long lastSignLife;
+	private long lastKeepAlive;
 	
+	public long getLastKeepAlive() {
+		return lastKeepAlive;
+	}
+
+	public void setLastKeepAlive(long lastKeepAlive) {
+		this.lastKeepAlive = lastKeepAlive;
+	}
+
 	public User(String userName, String password){
 		listFriends = new LinkedList<User>();
 		setUserName(userName);
@@ -86,31 +86,6 @@ public class User implements Comparable<User>, Runnable {
 		return this.getUserName() +" - " +status;
 	}
 	
-	public void signLife(){
-		try{
-			Socket socket = new Socket(Server.ADDRES, Server.PORT);
-			DataOutputStream outServer = new DataOutputStream(socket.getOutputStream());
-			outServer.writeInt(1);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
-	@Override
-	public void run() {
-		BufferedReader msgReturnServer;
-		while(true){
-			try{
-				Socket socket = new Socket(Server.ADDRES, Server.PORT);
-				DataOutputStream outServer = new DataOutputStream(socket.getOutputStream());
-				outServer.writeInt(1);
-				msgReturnServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				this.lastSignLife = System.currentTimeMillis();
-				Thread.sleep(TIMEWAIT);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-	}
+
 	
 }
