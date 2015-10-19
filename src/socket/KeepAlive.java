@@ -2,13 +2,17 @@ package socket;
 
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+
 
 import entity.User;
 
 public class KeepAlive implements Runnable {
 
 	User user;
+	List<String> friends;
 	public KeepAlive(User user){
 		this.user = user;
 	}
@@ -24,13 +28,18 @@ public class KeepAlive implements Runnable {
 				outServer.flush();
 				Scanner msgServer = new Scanner(userSocket.getInputStream());
 				int total = Integer.parseInt(msgServer.nextLine());
+				this.friends = new ArrayList<String>();
 				for(int i = 0; i < total; i++){
-					System.out.println(msgServer.nextLine());
+					friends.add(msgServer.nextLine());
 				}
 				Thread.sleep(500);
 			}catch(Exception e){
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public List<String> getFriends(){
+		return this.friends;
 	}
 }
