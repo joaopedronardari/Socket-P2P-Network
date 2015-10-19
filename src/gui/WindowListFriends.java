@@ -52,7 +52,7 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 			listModel.addElement(listFriends.get(i));
 		}
 		
-		ReceiveMsg recebedor = new ReceiveMsg(usr);
+		ReceiveMsg recebedor = new ReceiveMsg(usr,listFriends);
 		recebedor.start();
 		
 		button = new JButton("Conversar");

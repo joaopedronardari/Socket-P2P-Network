@@ -61,17 +61,10 @@ public class WindowTalk extends JFrame implements ActionListener{
 				inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				outToServer.writeBytes("msg////" + msg.getText() + "////" +usr.getUserName()+ "\n");
 				conversa.append(msg.getText());
-				msg.setText("");
-				msg.requestFocus();
 			}
 			
-			else{
-				JOptionPane.showMessageDialog(this, "Sua mensagem não possui conteúdo");
-				
-			}
-			
-			//receber = new ReceiveMsg(usr,this);
-			
+			msg.setText("");
+			msg.requestFocus();
 			
 		} catch (IOException e1) {
 			System.out.println("Erro no envio da mensagem");

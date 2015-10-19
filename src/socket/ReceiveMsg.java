@@ -17,10 +17,12 @@ public class ReceiveMsg extends Thread{
 	User user;
 	List<WindowTalk> conversas;
 	String msg;
+	List<User> friends;
 	
-	public ReceiveMsg(User usr){
+	public ReceiveMsg(User usr,List<User> friends){
 		this.user = usr;
 		conversas = new ArrayList<WindowTalk>();
+		this.friends = friends;
 	}
 	
 	public void add(WindowTalk t){
@@ -39,9 +41,22 @@ public class ReceiveMsg extends Thread{
 				System.out.println(msg);
 				String[]parse = msg.split("////");
 				for(int i = 0;i < conversas.size();i++){
-					WindowTalk aux = conversas.get(i);
-					if(aux.selected.getUserName().equals(parse[2])) aux.conversa.append(parse[0]);
-					//connection.
+					WindowTalk talk = conversas.get(i);
+					if(talk.selected.getUserName().equals(parse[2])) talk.conversa.append(parse[0]);
+					else{
+						User compare = new User(user.getUserName());
+						for(int j = 0;j < friends.size();j++){
+							User aux = friends.get(j);
+							if(compare.compareTo(aux) == 0){
+								WindowTalk newTalk = new WindowTalk(user,aux);
+								newTalk.conversa.append(parse[0]);
+								newTalk.setVisible(true);
+								conversas.add(newTalk);
+							}
+						}
+						
+						
+					}
 				}
 			}
 		} catch (IOException e1) {
