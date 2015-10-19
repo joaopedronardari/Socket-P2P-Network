@@ -20,6 +20,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import entity.User;
+import socket.ReceiveMsg;
 import socket.Server;
 
 public class WindowListFriends extends JFrame implements ActionListener,ListSelectionListener{
@@ -28,6 +29,7 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 	JButton button;
 	User selected;
 	User usr;
+	ReceiveMsg listener;
 	
 	public WindowListFriends(User usr) {
 		super("Veja quem está online");
@@ -49,6 +51,9 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		*/
 			listModel.addElement(listFriends.get(i));
 		}
+		
+		ReceiveMsg recebedor = new ReceiveMsg(usr);
+		recebedor.start();
 		
 		button = new JButton("Conversar");
 		button.setEnabled(false);
@@ -88,6 +93,9 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		new WindowTalk(usr,selected);
+		WindowTalk chat = new WindowTalk(usr,selected);
+		listener.add(chat);
+		
+		
 	}
 }
