@@ -33,7 +33,7 @@ public class WindowTalk extends JFrame implements ActionListener{
 	DataOutputStream outToServer;
 	BufferedReader inFromServer;
 	public JTextArea conversa;
-
+	//
 	public WindowTalk(User usr,User selected){
 		super("Conversa com " +selected);
 		conversa = new JTextArea();
