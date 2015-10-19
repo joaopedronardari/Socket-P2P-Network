@@ -21,6 +21,7 @@ import socket.Server;
 
 public class WindowLogin extends JFrame implements ActionListener{
 
+	private static final long serialVersionUID = 1L;
 	private JTextField userField;
 	private JPasswordField passwordField;
 	private JLabel userLabel;
@@ -67,7 +68,7 @@ public class WindowLogin extends JFrame implements ActionListener{
 				Socket userSocket = new Socket(Server.ADDRES, Server.PORT);
 				PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
 				outServer.println("login");
-				outServer.println(userField.getText()+" "+passwordField.getText());
+				outServer.println(userField.getText()+" "+ new String(passwordField.getPassword()));
 				outServer.flush();
 				Scanner msgServer = new Scanner(userSocket.getInputStream());
 
@@ -96,7 +97,7 @@ public class WindowLogin extends JFrame implements ActionListener{
 					new WindowListFriends(user);
 				}else{
 					//SERVIDOR RETORNOU ZERO (SENHA OU USUÁRIO INCORRETO)
-					new JOptionPane().showMessageDialog(this, "Usuário ou senha incorreto");
+					JOptionPane.showMessageDialog(this, "Usuário ou senha incorreto");
 				}
 			}catch(Exception exception){
 				exception.printStackTrace();
