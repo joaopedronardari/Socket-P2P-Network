@@ -17,6 +17,8 @@ import socket.Connection;
 
 public class WindowLogin extends JFrame implements ActionListener{
 
+	private static final long serialVersionUID = 1L;
+	
 	private JTextField userField;
 	private JPasswordField passwordField;
 	private JLabel userLabel;
@@ -60,9 +62,9 @@ public class WindowLogin extends JFrame implements ActionListener{
 			passwordField.setText("");
 		}else{
 			Connection conection = new Connection();
-			User user = conection.starConnection(userField.getText(), passwordField.getText());
+			User user = conection.starConnection(userField.getText(), passwordField.getPassword().toString());
 			if(user == null){
-				new JOptionPane().showMessageDialog(this, "Usuário ou senha incorreto");
+				JOptionPane.showMessageDialog(this, "Usuário ou senha incorreto");
 			}else{
 				dispose();
 				new WindowListFriends(user);
