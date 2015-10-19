@@ -4,6 +4,9 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,12 +16,11 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import entity.User;
-import socket.Connection;
+import socket.Server;
+
 
 public class WindowLogin extends JFrame implements ActionListener{
 
-	private static final long serialVersionUID = 1L;
-	
 	private JTextField userField;
 	private JPasswordField passwordField;
 	private JLabel userLabel;
@@ -61,15 +63,45 @@ public class WindowLogin extends JFrame implements ActionListener{
 			userField.setText("");
 			passwordField.setText("");
 		}else{
-			Connection conection = new Connection();
-			User user = conection.starConnection(userField.getText(), passwordField.getPassword().toString());
-			if(user == null){
-				JOptionPane.showMessageDialog(this, "Usuário ou senha incorreto");
-			}else{
-				dispose();
-				new WindowListFriends(user);
+			try{
+				Socket userSocket = new Socket(Server.ADDRES, Server.PORT);
+				PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
+				outServer.println("login");
+				outServer.println(userField.getText()+" "+passwordField.getText());
+				outServer.flush();
+				Scanner msgServer = new Scanner(userSocket.getInputStream());
+
+				User user = new User(userField.getText());
+				
+				// SERVIDOR RETORNA A PRIMEIRA LINHA COMO 1 (LOGIN FEITO COM SUCESSO)
+				// E RETORNA A LISTA DE AMIGOS DO CLIENTE
+				if(msgServer.nextLine().equals("1")){
+					int size = Integer.parseInt(msgServer.nextLine());
+					user.setConnect(true);
+					for( int j = 0; j < size; j++){
+						String[] parse = msgServer.nextLine().split(" - ");
+						User friend = new User(parse[0]);
+						if(parse[1].equals("Offline")){
+							friend.setConnect(false);
+						}else{
+							friend.setConnect(true);
+						}
+						user.getListFriends().add(friend);
+					}
+					dispose();
+					//AVISO PARA O GUILHERME APAGAR O COMENTÁRIO DEPOIS.
+					//CARA O MÉTODO NECESSITA DE UM OBJETO DO TIPO USER
+					//MAS EU NÃO CONSIGO SERIALIZAR O OBJETO PARA PASSAR PELO SOCKET
+					//ENTAO CRII O OBJETO NO LADO CLIENTE COM BASE NA RESPOSTA DO SERVIDOR
+					new WindowListFriends(user);
+				}else{
+					//SERVIDOR RETORNOU ZERO (SENHA OU USUÁRIO INCORRETO)
+					new JOptionPane().showMessageDialog(this, "Usuário ou senha incorreto");
+				}
+			}catch(Exception exception){
+				exception.printStackTrace();
 			}
-		}		
+		}
 	}
 	
 	public static void main(String[] args) {
