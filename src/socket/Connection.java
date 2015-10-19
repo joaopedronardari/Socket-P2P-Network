@@ -12,10 +12,11 @@ public class Connection {
 	
 	 public User starConnection(String username, String password) {
 		 User user = null;
+		 Scanner scanner = null;
 		 try{
-			Scanner sc = new Scanner(new File("usuarios.txt"));
-			while(sc.hasNextLine()){
-				String[] line = sc.nextLine().split("_");
+			scanner = new Scanner(new File("usuarios.txt"));
+			while(scanner.hasNextLine()){
+				String[] line = scanner.nextLine().split("_");
 				if(line[0].equals(username) && line[1].equals(password)){
 					user = new User(username, password);
 					user.setConnect(true);
@@ -32,9 +33,12 @@ public class Connection {
 					return user;
 				}
 			}
-		}catch(FileNotFoundException e){
+		} catch(FileNotFoundException e){
 			System.out.println("File not found!");
+		} finally {
+		    if(scanner!=null) { scanner.close(); }
 		}
+		
 		return user;
 	}
 	 
