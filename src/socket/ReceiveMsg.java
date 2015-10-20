@@ -41,22 +41,28 @@ public class ReceiveMsg extends Thread{
 				String msg = inFromOthers.readLine();
 				System.out.println(msg);
 				String[]parse = msg.split("////");
+				
+				// Check if has window
+				boolean hasWindow = false;
+				
 				for(int i = 0;i < conversas.size();i++){
 					WindowTalk talk = conversas.get(i);
-					if(talk.selected.getUserName().equals(parse[2])) talk.conversa.append(parse[0]);
-					else{
-						User compare = new User(user.getUserName());
-						for(int j = 0;j < friends.size();j++){
-							User aux = friends.get(j);
-							if(compare.compareTo(aux) == 0){
-								WindowTalk newTalk = new WindowTalk(user,aux);
-								newTalk.conversa.append(parse[0]);
-								newTalk.setVisible(true);
-								conversas.add(newTalk);
-							}
+					if(talk.selected.getUserName().equals(parse[2])) { 
+						talk.conversa.append(parse[1]);
+						hasWindow = true;
+					}
+				}
+				
+				if (!hasWindow) {
+					User compare = new User(parse[2]);
+					for(int j = 0;j < friends.size();j++){
+						User aux = friends.get(j);
+						if(compare.compareTo(aux) == 0){
+							WindowTalk newTalk = new WindowTalk(user,aux);
+							newTalk.conversa.append(parse[1]);
+							newTalk.setVisible(true);
+							conversas.add(newTalk);
 						}
-						
-						
 					}
 				}
 			}

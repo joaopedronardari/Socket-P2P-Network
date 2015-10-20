@@ -61,7 +61,8 @@ public class WindowTalk extends JFrame implements ActionListener{
 		setSize(400, 200);
 		setVisible(true);
 		
-		this.user = user;
+		this.user     = user;
+		this.selected = selected;
 		
 		try {
 			clientSocket = new Socket(selected.getIp(),2879);
