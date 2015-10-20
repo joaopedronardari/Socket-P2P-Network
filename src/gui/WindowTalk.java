@@ -33,7 +33,7 @@ import entity.User;
 public class WindowTalk extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
-	User usr;
+	User user;
 	public User selected;
 	JTextArea msg;
 	Socket clientSocket;
@@ -42,10 +42,10 @@ public class WindowTalk extends JFrame implements ActionListener{
 	BufferedReader inFromServer;
 	public JTextArea conversa;
 	//
-	public WindowTalk(User usr,User selected){
+	public WindowTalk(User user,User selected){
 		super("Conversa com " +selected);
 		Container window = getContentPane();
-		window.setLayout(new GridLayout(usr.getListFriends().size(), 2,10,10));
+		window.setLayout(new GridLayout(user.getListFriends().size(), 2,10,10));
 		conversa = new JTextArea();
 		conversa.setEditable(false);
 		msg = new JTextArea();
@@ -61,14 +61,14 @@ public class WindowTalk extends JFrame implements ActionListener{
 		setSize(400, 200);
 		setVisible(true);
 		
+		this.user = user;
+		
 		try {
 			clientSocket = new Socket(selected.getIp(),2879);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, "Erro no estabelecimento da conexão com " + selected.getUserName());
 			e.printStackTrace();
-		}		
-		
-					
+		}
 	}	
 	
 	@Override
@@ -78,7 +78,7 @@ public class WindowTalk extends JFrame implements ActionListener{
 						
 				outToServer = new DataOutputStream(clientSocket.getOutputStream());
 				inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-				outToServer.writeBytes("msg////" + msg.getText() + "////" +usr.getUserName()+ "\n");
+				outToServer.writeBytes("msg////" + msg.getText() + "////" +user.getUserName()+ "\n");
 				conversa.append(msg.getText());
 			}
 			
