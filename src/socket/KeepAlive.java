@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 
 import entity.User;
-
+//
 public class KeepAlive implements Runnable {
 
 	User user;

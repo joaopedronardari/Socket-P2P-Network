@@ -12,7 +12,7 @@ public class PutUserInactive implements Runnable {
 	public PutUserInactive(Vector<User>listUser) {
 		this.listUser = listUser;
 	}
-
+	//
 	@Override
 	public void run() {
 		try {

@@ -102,7 +102,7 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 			else if (selected == null || !selected.isConnect()) button.setEnabled(false); 
 		}
 	}
-
+	//
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		WindowTalk chat = new WindowTalk(usr,selected);
