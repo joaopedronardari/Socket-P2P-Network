@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.Vector;
+import java.util.List;
 
 import entity.User;
 
@@ -87,24 +88,14 @@ public class Server {
 					String[] parse = msgUser.split(" ");
 					user = loginUser(parse[0], parse[1]); 
 					if(user != null){
-						//MENSAGEM IGUAL 1 LOGIN FEITO COM SUCESSO
-						//CONCATENA A LISTA DE AMIGOS
-						user.setLastKeepAlive(System.currentTimeMillis());
+						//MENSAGEM IGUAL 1 LOGIN FEITO COM SUCESSO E PORTA
 						outToClient.println("1");
 						outToClient.println(portUser);
-						outToClient.println(user.getListFriends().size());
-						System.out.println("Friends:");
-						for(int i = 0; i < user.getListFriends().size(); i++){
-							User us = user.getListFriends().get(i);
-							System.out.println(" --> user:"+us.getUserName()+" porta:"+us.getPort()+" connected:"+us.isConnect());
-							if(findUser(us) != null){
-								outToClient.println(us.getUserName()+",online,"+us.getIp()+","+us.getPort());
-							}else{
-								outToClient.println(us.getUserName()+",offline,"+us.getIp()+","+us.getPort());
-							}
-						}
-					}else{
+						user.setLastKeepAlive(System.currentTimeMillis());
 						
+						//CONCATENA A LISTA DE AMIGOS
+						sendFriendsList(user.getListFriends(), outToClient);
+					}else{
 						//SENHA OU USERNAME INCORRETO
 						outToClient.println("0");
 					}
@@ -117,16 +108,7 @@ public class Server {
 					usr = findUser(usr);
 					if(usr != null){
 						usr.setLastKeepAlive(System.currentTimeMillis());
-						outToClient.println(usr.getListFriends().size());
-						//System.out.println("Friends from " + usr.getUserName());
-						for(User us : usr.getListFriends()){
-							//System.out.println(" --> user:"+us.getUserName()+" porta:"+us.getPort()+" connected:"+us.isConnect());
-							if(findUser(us) != null){
-								outToClient.println(us.getUserName()+",online,"+us.getIp()+","+us.getPort());
-							}else{
-								outToClient.println(us.getUserName()+",offline,"+us.getIp()+","+us.getPort());
-							}
-						}
+						sendFriendsList(usr.getListFriends(), outToClient);
 					}
 					outToClient.flush();
 				}else if (msgUser.equals("off")){
@@ -140,6 +122,19 @@ public class Server {
 			}
 		}catch(Exception e){
 				e.printStackTrace();
+		}
+	}
+
+	private static void sendFriendsList(List<User> friendsList, PrintWriter outToClient) {
+		outToClient.println(friendsList.size());
+		//System.out.println("Friends from " + usr.getUserName());
+		for(User friend : friendsList){
+			//System.out.println(" --> user:"+friend.getUserName()+" porta:"+friend.getPort()+" connected:"+friend.isConnect());
+			if(findUser(friend) != null){
+				outToClient.println(friend.getUserName()+",online,"+friend.getIp()+","+friend.getPort());
+			}else{
+				outToClient.println(friend.getUserName()+",offline,"+friend.getIp()+","+friend.getPort());
+			}
 		}
 	}
 	
