@@ -19,6 +19,7 @@ public class KeepAlive implements Runnable {
 	
 	@Override
 	public void run() {
+		// FIXME - Refactor needed
 		while(true){
 			try{
 				Socket userSocket = new Socket(Server.ADDRES, Server.PORT);

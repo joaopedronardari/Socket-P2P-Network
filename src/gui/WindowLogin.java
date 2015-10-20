@@ -107,6 +107,7 @@ public class WindowLogin extends JFrame implements ActionListener{
 					JOptionPane.showMessageDialog(this, "Usuário ou senha incorreto");
 				}
 			}catch(Exception exception){
+
 				if(exception instanceof ConnectException){
 					JOptionPane.showMessageDialog(this, "Erro no estabelecimento da conexão, verifique se o servidor está rodando");
 				}

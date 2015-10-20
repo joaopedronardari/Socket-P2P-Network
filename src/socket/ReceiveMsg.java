@@ -31,6 +31,7 @@ public class ReceiveMsg extends Thread{
 	
 	@Override
 	public void run(){
+		// FIXME - Refactor Needed
 		try {
 			ServerSocket welcome = new ServerSocket(2879);
 			while(true){
