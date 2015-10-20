@@ -25,6 +25,8 @@ import socket.ReceiveMsg;
 import entity.User;
 
 public class WindowTalk extends JFrame implements ActionListener{
+
+	private static final long serialVersionUID = 1L;
 	User usr;
 	public User selected;
 	JTextArea msg;

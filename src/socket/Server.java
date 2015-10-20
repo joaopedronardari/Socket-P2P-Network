@@ -45,6 +45,7 @@ public class Server {
 		
 		
 		User user = null;
+		// FIXME - Refactor Needed
 		 try{			
 			ServerSocket loginSocket = new ServerSocket(Server.PORT);
 			while(true){
@@ -108,6 +109,7 @@ public class Server {
 	}
 	
 	 private static User loginUser(String username, String password){
+		 // FIXME - Refactor needed
 		 try{
 			 Scanner sc = new Scanner(new File("usuarios.txt"));
 			 while(sc.hasNextLine()){				
