@@ -21,7 +21,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.sun.glass.events.WindowEvent;
 
 import entity.User;
 import socket.KeepAlive;
@@ -73,12 +72,7 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		KeepAlive keepAlive = new KeepAlive(usr);
 		Thread t1 = new Thread(keepAlive);
 		t1.start();
-		
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent evt) {  
-				
-			}
-		});
+	
 	}
 	
 	private void socketLogoff(){
