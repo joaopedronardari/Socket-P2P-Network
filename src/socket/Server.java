@@ -21,6 +21,7 @@ public class Server {
 	//private static TreeMap<User, String> userConnect;
 	
 	private static Vector<User> userConnect;
+
 	
 	public Server(){
 		 //userConnect = new TreeMap<User, String>();
@@ -112,9 +113,9 @@ public class Server {
 						outToClient.println(usr.getListFriends().size());
 						for(User us : usr.getListFriends()){
 							if(findUser(us) != null){
-								outToClient.println(us.getUserName()+",online,"+us.getIp());
+								outToClient.println(us.getUserName()+",online,"+us.getIp()+","+us.getPort());
 							}else{
-								outToClient.println(us.getUserName()+",offline,"+us.getIp());
+								outToClient.println(us.getUserName()+",offline,"+us.getIp()+","+us.getPort());
 							}
 						}
 					}

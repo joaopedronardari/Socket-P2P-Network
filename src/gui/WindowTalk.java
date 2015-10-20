@@ -66,7 +66,7 @@ public class WindowTalk extends JFrame implements ActionListener{
 		this.selected = selected;
 		
 		try {
-			clientSocket = new Socket(selected.getIp(),User.SOCKET_PORT);
+			clientSocket = new Socket(selected.getIp(),selected.getPort());
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, "Erro no estabelecimento da conexão com " + selected.getUserName());
 			e.printStackTrace();
@@ -82,6 +82,8 @@ public class WindowTalk extends JFrame implements ActionListener{
 				inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				outToServer.writeBytes("msg////" + msg.getText() + "////" +user.getUserName()+ "\n");
 				conversa.append(msg.getText());
+				outToServer.close();
+				inFromServer.close();
 			}
 			
 			msg.setText("");
