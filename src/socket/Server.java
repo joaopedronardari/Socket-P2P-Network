@@ -15,17 +15,12 @@ import entity.User;
 public class Server {
 
 	public static final String ADDRES = "127.0.0.1";
-<<<<<<< HEAD
-	public static final int PORT = 10001;
-	private static TreeMap<User, String> userConnect;
-=======
 	public static final int PORT = 10000;
 	//PORTA UTILIZADA PARA CONVERSAR COM OUTRO USUÁRIO LOCALMENTE
 	private static int portUser = 6000;
 	//private static TreeMap<User, String> userConnect;
 	
 	private static Vector<User> userConnect;
->>>>>>> 4982c642eaf0b2f9792b351827687054f7f3be8a
 	
 	public Server(){
 		 //userConnect = new TreeMap<User, String>();
