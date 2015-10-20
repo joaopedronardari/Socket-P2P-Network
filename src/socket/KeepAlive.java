@@ -33,7 +33,7 @@ public class KeepAlive implements Runnable {
 				for(int i = 0; i < total; i++){
 					String nextLine = msgServer.nextLine();
 					friends.add(nextLine);
-					System.out.println(nextLine);
+					//System.out.println(nextLine);
 				}
 				Thread.sleep(500);
 			}catch(Exception e){

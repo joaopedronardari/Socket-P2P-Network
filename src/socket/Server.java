@@ -110,14 +110,17 @@ public class Server {
 					}
 					outToClient.flush();
 				}	
-				else if(msgUser.equals("keepalive")){
+				else if(msgUser.equals("keepalive")){ 
+					// FIXME - BUG lista de amigos nao esta sendo atualizada
 					msgUser = inFromClient.nextLine();
 					User usr = new User(msgUser);
 					usr = findUser(usr);
 					if(usr != null){
 						usr.setLastKeepAlive(System.currentTimeMillis());
 						outToClient.println(usr.getListFriends().size());
+						//System.out.println("Friends from " + usr.getUserName());
 						for(User us : usr.getListFriends()){
+							//System.out.println(" --> user:"+us.getUserName()+" porta:"+us.getPort()+" connected:"+us.isConnect());
 							if(findUser(us) != null){
 								outToClient.println(us.getUserName()+",online,"+us.getIp()+","+us.getPort());
 							}else{
