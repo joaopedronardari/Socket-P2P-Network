@@ -84,6 +84,7 @@ public class WindowLogin extends JFrame implements ActionListener{
 				
 				// Server returns 1 (Login successful) and the friends list
 				if(msgServer.nextLine().equals("1")){
+					// FIXME - Duplicated Code
 					int size = Integer.parseInt(msgServer.nextLine());
 					user.setConnect(true);
 					for( int j = 0; j < size; j++){

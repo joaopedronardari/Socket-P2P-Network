@@ -12,9 +12,11 @@ import entity.User;
 public class KeepAlive implements Runnable {
 
 	User user;
-	List<String> friends;
-	public KeepAlive(User user){
+	WindowListFriends windowListFriends;
+	List<User> friends;
+	public KeepAlive(User user, WindowListFriends windowListFriends){
 		this.user = user;
+		this.windowListFriends = windowListFriends;
 	}
 	
 	@Override
@@ -28,11 +30,29 @@ public class KeepAlive implements Runnable {
 				outServer.println(user.getUserName());
 				outServer.flush();
 				Scanner msgServer = new Scanner(userSocket.getInputStream());
-				int total = Integer.parseInt(msgServer.nextLine());
-				this.friends = new ArrayList<String>();
-				for(int i = 0; i < total; i++){
-					friends.add(msgServer.nextLine());
+				
+				// FIXME - Duplicated Code
+				int size = Integer.parseInt(msgServer.nextLine());
+				this.friends = new ArrayList<User>();
+				for( int j = 0; j < size; j++){
+					String[] parse = msgServer.nextLine().split(" - ");
+					User friend = new User(parse[0]);
+					if(parse[1].equals("Offline")){
+						friend.setConnect(false);
+					}else{
+						friend.setConnect(true);
+					}
+					friends.add(friend);
 				}
+
+				if (this.friends != null) {
+					java.awt.EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							windowListFriends.updateFriendsList(this.friends);
+						}
+					});
+				}
+
 				Thread.sleep(500);
 			}catch(Exception e){
 				e.printStackTrace();

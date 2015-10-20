@@ -27,6 +27,8 @@ import socket.KeepAlive;
 import socket.ReceiveMsg;
 import socket.Server;
 
+import gui.WindowListFriends;
+
 public class WindowListFriends extends JFrame implements ActionListener,ListSelectionListener{
 
 	private static final long serialVersionUID = 1L;
@@ -41,11 +43,9 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		this.usr = usr;
 		Container window = getContentPane();
 		window.setLayout(new GridLayout(usr.getListFriends().size()+2, 2,10,10));
+		
 		List<User> listFriends = usr.getListFriends();
-		DefaultListModel<User> listModel = new DefaultListModel<User>();
-		for(int i = 0; i < usr.getListFriends().size(); i++){
-			listModel.addElement(listFriends.get(i));
-		}
+		DefaultListModel<User> listModel = generateListModel();
 		
 		listener = new ReceiveMsg(usr,listFriends);
 		listener.start();
@@ -68,10 +68,23 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		setSize(400, 250);
 		setVisible(true);
 		
-		KeepAlive keepAlive = new KeepAlive(usr);
+		KeepAlive keepAlive = new KeepAlive(usr, this);
 		Thread t1 = new Thread(keepAlive);
 		t1.start();
 	
+	}
+
+	public DefaultListModel<User> generateListModel(List<User> listFriends) {
+		DefaultListModel<User> listModel = new DefaultListModel<User>();
+		for(int i = 0; i < usr.getListFriends().size(); i++){
+			listModel.addElement(listFriends.get(i));
+		}
+		return listModel;
+	}
+
+	public void updateFriendsList(List<User> listFriends) {
+		DefaultListModel<User> listModel = generateListModel(listFriends);
+		friends.setModel(listModel);
 	}
 	
 	private void socketLogoff(){
