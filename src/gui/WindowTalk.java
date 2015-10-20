@@ -45,7 +45,6 @@ public class WindowTalk extends JFrame implements ActionListener{
 	//
 	public WindowTalk(User user,User selected){
 		super("Conversa com " +selected);
-		System.out.println("Eu sou: "+user.getUserName()+" e minha porta "+user.getPort()+" vou conversar com"+selected.getUserName()+" e sua porta e "+selected.getPort());
 		Container window = getContentPane();
 		window.setLayout(new GridLayout(user.getListFriends().size(), 2,10,10));
 		conversa = new JTextArea();

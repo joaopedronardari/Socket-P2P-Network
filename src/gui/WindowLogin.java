@@ -84,21 +84,19 @@ public class WindowLogin extends JFrame implements ActionListener{
 				
 				// Server returns 1 (Login successful) and the friends list
 				if(msgServer.nextLine().equals("1")){
-					user.setPort(Integer.parseInt(msgServer.nextLine()));
+					
 					int size = Integer.parseInt(msgServer.nextLine());
 					user.setConnect(true);
 					for( int j = 0; j < size; j++){
-						//String[] parse = msgServer.nextLine().split(" - ");
-						//outToClient.println(us.getUserName()+",online,"+us.getIp()+","+us.getPort());
-						String[] parse = msgServer.nextLine().split(",");
+						String[] parse = msgServer.nextLine().split(" - ");
+						
 						User friend = new User(parse[0]);
-						if(parse[1].equals("offline")){
+						if(parse[1].equals("Offline")){
 							friend.setConnect(false);
 						}else{
 							friend.setConnect(true);
 						}
-						friend.setIp(parse[2]);
-						friend.setPort(Integer.parseInt(parse[3]));
+						
 						user.getListFriends().add(friend);
 					}
 					dispose();

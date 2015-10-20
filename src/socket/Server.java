@@ -88,6 +88,13 @@ public class Server {
 					String[] parse = msgUser.split(" ");
 					user = loginUser(parse[0], parse[1]); 
 					if(user != null){
+						//FAZ O CONTROLE DA PORTA PARA CONVERSAR LOCALMENTE
+						portUser += 1;
+						user.setPort(portUser);
+						//MENSAGEM IGUAL 1 LOGIN FEITO COM SUCESSO
+						//CONCATENA A LISTA DE AMIGOS
+						user.setLastKeepAlive(System.currentTimeMillis());
+
 						//MENSAGEM IGUAL 1 LOGIN FEITO COM SUCESSO E PORTA
 						outToClient.println("1");
 						outToClient.println(portUser);
@@ -146,21 +153,15 @@ public class Server {
 					String[] line = sc.nextLine().split("_");
 					if(line[0].equals(username) && line[1].equals(password)){
 						User user = new User(username, password);
-						//FAZ O CONTROLE DA PORTA PARA CONVERSAR LOCALMENTE
-						portUser += 1;
-						user.setPort(portUser);
 						user.setConnect(true);
-						user.setLastKeepAlive(System.currentTimeMillis());
 						addUser(user);
 						String[] friends = line[2].split(" ");
 						for(int i = 0; i < friends.length; i++){
 							User usr = findUser(new User(friends[i]));
-							if(usr != null){
+							if(findUser(usr) != null){
 								usr.setConnect(true);
-								user.getListFriends().add(usr);
-							}else{
-								user.getListFriends().add(new User(friends[i]));
 							}
+							user.getListFriends().add(usr);
 						}
 						System.out.println("Login - " + user.getUserName());
 						return user;
