@@ -30,6 +30,7 @@ public class Server {
 	}
 	public static void addUser(User user){
 		user.setConnect(true);
+		System.out.println("Porta ao adicionar usuario"+user.getPort());
 		//userConnect.put(user, user.getIp());
 		userConnect.addElement(user);
 	}
@@ -86,16 +87,20 @@ public class Server {
 					String[] parse = msgUser.split(" ");
 					user = loginUser(parse[0], parse[1]); 
 					if(user != null){
-						//FAZ O CONTROLE DA PORTA PARA CONVERSAR LOCALMENTE
-						portUser += 1;
-						user.setPort(portUser);
 						//MENSAGEM IGUAL 1 LOGIN FEITO COM SUCESSO
 						//CONCATENA A LISTA DE AMIGOS
 						user.setLastKeepAlive(System.currentTimeMillis());
 						outToClient.println("1");
+						outToClient.println(portUser);
 						outToClient.println(user.getListFriends().size());
 						for(int i = 0; i < user.getListFriends().size(); i++){
-							outToClient.println(user.getListFriends().get(i));
+							User us = user.getListFriends().get(i);
+							System.out.println("Estaos no servidor usuario"+us.getUserName()+" porta"+us.getPort()+" "+us.isConnect());
+							if(findUser(us) != null){
+								outToClient.println(us.getUserName()+",online,"+us.getIp()+","+us.getPort());
+							}else{
+								outToClient.println(us.getUserName()+",offline,"+us.getIp()+","+us.getPort());
+							}
 						}
 					}else{
 						
@@ -142,15 +147,21 @@ public class Server {
 					String[] line = sc.nextLine().split("_");
 					if(line[0].equals(username) && line[1].equals(password)){
 						User user = new User(username, password);
+						//FAZ O CONTROLE DA PORTA PARA CONVERSAR LOCALMENTE
+						portUser += 1;
+						user.setPort(portUser);
 						user.setConnect(true);
+						user.setLastKeepAlive(System.currentTimeMillis());
 						addUser(user);
 						String[] friends = line[2].split(" ");
 						for(int i = 0; i < friends.length; i++){
-							User usr = new User(friends[i]);
-							if(findUser(usr) != null){
+							User usr = findUser(new User(friends[i]));
+							if(usr != null){
 								usr.setConnect(true);
+								user.getListFriends().add(usr);
+							}else{
+								user.getListFriends().add(new User(friends[i]));
 							}
-							user.getListFriends().add(usr);
 						}
 						System.out.println("USUARIO FEZ LOGGIN");
 						return user;

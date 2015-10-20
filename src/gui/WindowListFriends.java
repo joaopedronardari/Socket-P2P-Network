@@ -44,9 +44,10 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		List<User> listFriends = usr.getListFriends();
 		DefaultListModel<User> listModel = new DefaultListModel<User>();
 		for(int i = 0; i < usr.getListFriends().size(); i++){
+			System.out.println("Porta dos usuários na JList: "+listFriends.get(i).getPort());
 			listModel.addElement(listFriends.get(i));
 		}
-		
+		System.out.println("Fim ");
 		listener = new ReceiveMsg(usr,listFriends);
 		listener.start();
 		

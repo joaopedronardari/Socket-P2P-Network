@@ -33,7 +33,9 @@ public class ReceiveMsg extends Thread{
 	public void run(){
 		// FIXME - Refactor Needed
 		try {
+			System.out.println(user.getUserName()+" e sua porta "+user.getPort());
 			ServerSocket welcome = new ServerSocket(user.getPort());
+			System.out.println("passou");
 			while(true){
 				Socket connection = welcome.accept();
 				BufferedReader inFromOthers = new BufferedReader(new InputStreamReader(connection.getInputStream()));
