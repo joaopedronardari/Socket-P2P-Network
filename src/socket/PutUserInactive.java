@@ -1,31 +1,38 @@
 package socket;
 
 import java.util.TreeMap;
+import java.util.Vector;
 
 import entity.User;
 
 public class PutUserInactive implements Runnable {
 
-	TreeMap<User, String> listUser;
+	Vector<User> listUser;
 
-	public PutUserInactive(TreeMap<User, String> listUser) {
+	public PutUserInactive(Vector<User>listUser) {
 		this.listUser = listUser;
 	}
 
 	@Override
 	public void run() {
 		try {
-			System.out.println("remover usuários inativos");
-			if (!listUser.isEmpty()) {
-				for (User user : listUser.keySet()) {
-					if ((System.currentTimeMillis() - user.getLastKeepAlive()) > 5000) {
-						listUser.remove(user);
-					}
-				}
+			while(true){
+				removeUserInactive();
 			}
-			Thread.sleep(1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+		
+	public void removeUserInactive() throws Exception{
+		System.out.println("remover usuários inativos");
+		if (!listUser.isEmpty()) {
+			for (int i = 0; i < listUser.size(); i++) {
+				if ((System.currentTimeMillis() - listUser.get(i).getLastKeepAlive()) > 5000) {
+					listUser.remove(i);
+				}
+			}
+		}
+		Thread.sleep(5000);
 	}
 }

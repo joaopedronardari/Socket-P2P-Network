@@ -3,10 +3,12 @@ package socket;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.net.PortUnreachableException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.TreeMap;
+import java.util.Vector;
 
 import entity.User;
 
@@ -14,27 +16,51 @@ public class Server {
 
 	public static final String ADDRES = "127.0.0.1";
 	public static final int PORT = 10000;
-	private static TreeMap<User, String> userConnect;
+	//PORTA UTILIZADA PARA CONVERSAR COM OUTRO USUÁRIO LOCALMENTE
+	private static int portUser = 6000;
+	//private static TreeMap<User, String> userConnect;
+	
+	private static Vector<User> userConnect;
 	
 	public Server(){
-		 userConnect = new TreeMap<User, String>();
+		 //userConnect = new TreeMap<User, String>();
+		userConnect = new Vector<User>();
 		 starConnection();
 	}
 	public static void addUser(User user){
 		user.setConnect(true);
-		userConnect.put(user, user.getIp());		
+		//userConnect.put(user, user.getIp());
+		userConnect.addElement(user);
 	}
 	
 	public static boolean isConnect(User user){
-		return userConnect.containsKey(user);
+		//return userConnect.containsKey(user);
+		for(int i = 0; i < userConnect.size(); i++){
+			if(userConnect.get(i).getUserName().equals(user.getUserName())){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public static String getIpUser(User user){
-		return userConnect.get(user.getIp());
+		//return userConnect.get(user.getIp());
+		for(int i = 0; i < userConnect.size(); i++){
+			if(userConnect.get(i).getUserName().equals(user.getUserName())){
+				return userConnect.get(i).getIp();
+			}
+		}
+		return null;
 	} 
 	
-	public static String findUser(User user){
-		return userConnect.get(user);
+	public static User findUser(User user){
+		//return userConnect.get(user);
+		for(int i = 0; i < userConnect.size(); i++){
+			if(userConnect.get(i).getUserName().equals(user.getUserName())){
+				return userConnect.get(i);
+			}
+		}
+		return null;
 	}
 	
 	public static void starConnection() {
@@ -59,7 +85,9 @@ public class Server {
 					String[] parse = msgUser.split(" ");
 					user = loginUser(parse[0], parse[1]); 
 					if(user != null){
-						
+						//FAZ O CONTROLE DA PORTA PARA CONVERSAR LOCALMENTE
+						portUser += 1;
+						user.setPort(portUser);
 						//MENSAGEM IGUAL 1 LOGIN FEITO COM SUCESSO
 						//CONCATENA A LISTA DE AMIGOS
 						user.setLastKeepAlive(System.currentTimeMillis());
@@ -78,22 +106,19 @@ public class Server {
 				else if(msgUser.equals("keepalive")){
 					msgUser = inFromClient.nextLine();
 					User usr = new User(msgUser);
-					if(userConnect.containsKey(user)){
-						for(User u : userConnect.keySet()){
-							if(u.getUserName().equals(user.getUserName())){
-								u.setLastKeepAlive(System.currentTimeMillis());
-								outToClient.println(u.getListFriends().size());
-								for(User us : u.getListFriends()){
-									if(userConnect.containsKey(us)){
-										outToClient.println(us.getUserName()+" online");
-									}else{
-										outToClient.println(us.getUserName()+" offline");
-									}
-								}
+					usr = findUser(usr);
+					if(usr != null){
+						usr.setLastKeepAlive(System.currentTimeMillis());
+						outToClient.println(usr.getListFriends().size());
+						for(User us : usr.getListFriends()){
+							if(findUser(us) != null){
+								outToClient.println(us.getUserName()+",online,"+us.getIp());
+							}else{
+								outToClient.println(us.getUserName()+",offline,"+us.getIp());
 							}
 						}
-						outToClient.flush();
 					}
+					outToClient.flush();
 				}else if (msgUser.equals("off")){
 					System.out.println("OPERACAO: OFF");
 					msgUser = inFromClient.nextLine();
