@@ -33,7 +33,8 @@ public class ReceiveMsg extends Thread{
 	public void run(){
 		// FIXME - Refactor Needed
 		try {
-			ServerSocket welcome = new ServerSocket(User.SOCKET_PORT);
+			ServerSocket welcome = new ServerSocket(user.getPort());
+			System.out.println(user.getPort());
 			while(true){
 				Socket connection = welcome.accept();
 				BufferedReader inFromOthers = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -47,8 +48,10 @@ public class ReceiveMsg extends Thread{
 				
 				for(int i = 0;i < conversas.size();i++){
 					WindowTalk talk = conversas.get(i);
-					if(talk.selected.getUserName().equals(parse[2])) { 
+					if(talk.selected.getUserName().equals(parse[2])) {
+						talk.conversa.append("\n");
 						talk.conversa.append(parse[1]);
+						System.out.println(talk.conversa.getText());
 						hasWindow = true;
 					}
 				}
@@ -59,8 +62,8 @@ public class ReceiveMsg extends Thread{
 						User aux = friends.get(j);
 						if(compare.compareTo(aux) == 0){
 							WindowTalk newTalk = new WindowTalk(user,aux);
-							newTalk.conversa.append(parse[1]);
 							newTalk.setVisible(true);
+							newTalk.conversa.append(parse[1]);
 							conversas.add(newTalk);
 						}
 					}

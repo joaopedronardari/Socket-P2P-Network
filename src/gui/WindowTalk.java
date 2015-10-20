@@ -8,7 +8,9 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Scanner;
 
 import javax.jws.soap.SOAPBinding.Use;
 import javax.swing.JButton;
@@ -26,7 +28,11 @@ import javax.swing.JTextArea;
 
 
 
+
+
+
 import socket.ReceiveMsg;
+import socket.Server;
 //import socket.SendMessage;
 //import socket.Server;
 import entity.User;
@@ -65,34 +71,54 @@ public class WindowTalk extends JFrame implements ActionListener{
 		this.user     = user;
 		this.selected = selected;
 		
-		try {
-			clientSocket = new Socket(selected.getIp(),User.SOCKET_PORT);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(this, "Erro no estabelecimento da conexão com " + selected.getUserName());
-			e.printStackTrace();
-		}
+		
 	}	
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		try {
-			if(!msg.getText().trim().isEmpty()){
-						
+			Socket receiveData = new Socket(Server.ADDRES,Server.PORT);
+			PrintWriter writeToServer = new PrintWriter(receiveData.getOutputStream());
+			writeToServer.println("data");
+			writeToServer.println(selected.getUserName());
+			writeToServer.flush();
+			Scanner msgServer = new Scanner(receiveData.getInputStream());
+			String adress = msgServer.nextLine();
+			String[] parse = adress.split(",");
+			receiveData.close();
+			if(parse.length != 2) JOptionPane.showMessageDialog(this, "Amigo não encontrado");
+			else{
+				selected.setIp(parse[0]);
+				selected.setPort(Integer.parseInt(parse[1]));
+				System.out.println(selected.getPort());
+				clientSocket = new Socket(selected.getIp(),selected.getPort());
 				outToServer = new DataOutputStream(clientSocket.getOutputStream());
 				inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-				outToServer.writeBytes("msg////" + msg.getText() + "////" +user.getUserName()+ "\n");
-				conversa.append(msg.getText());
+				if(!msg.getText().trim().isEmpty()){
+					String send = "msg////" + msg.getText() + "////" +user.getUserName()+ "\n";
+					System.out.println(send);
+					outToServer.writeBytes(send);
+					outToServer.flush();
+					conversa.append("\n");
+					conversa.append(msg.getText());
+				}
 			}
-			
 			msg.setText("");
 			msg.requestFocus();
 			
-		} catch (IOException e1) {
-			System.out.println("Erro no envio da mensagem");
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(this, "Erro no estabelecimento da conexão com " + selected.getUserName());
 			e1.printStackTrace();
+		
+		}finally{
+			try {
+				if(clientSocket != null)clientSocket.close();
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 		}
-		
-		
+				
 	}
 		
 }

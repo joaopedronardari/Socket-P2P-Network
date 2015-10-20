@@ -96,6 +96,8 @@ public class WindowLogin extends JFrame implements ActionListener{
 						}
 						user.getListFriends().add(friend);
 					}
+					user.setPort(Integer.parseInt(msgServer.nextLine()));
+					System.out.println(user.getPort());
 					dispose();
 					//AVISO PARA O GUILHERME APAGAR O COMENTÁRIO DEPOIS.
 					//CARA O MÉTODO NECESSITA DE UM OBJETO DO TIPO USER
@@ -109,7 +111,7 @@ public class WindowLogin extends JFrame implements ActionListener{
 			}catch(Exception exception){
 
 				if(exception instanceof ConnectException){
-					JOptionPane.showMessageDialog(this, "Erro no estabelecimento da conexão, verifique se o servidor está rodando");
+					JOptionPane.showMessageDialog(this, "Erro no estabelecimento da conexão, verifique o servidor");
 				}
 				else exception.printStackTrace();
 			}

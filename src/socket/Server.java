@@ -15,17 +15,12 @@ import entity.User;
 public class Server {
 
 	public static final String ADDRES = "127.0.0.1";
-<<<<<<< HEAD
-	public static final int PORT = 10001;
-	private static TreeMap<User, String> userConnect;
-=======
 	public static final int PORT = 10000;
 	//PORTA UTILIZADA PARA CONVERSAR COM OUTRO USUÁRIO LOCALMENTE
 	private static int portUser = 6000;
 	//private static TreeMap<User, String> userConnect;
 	
 	private static Vector<User> userConnect;
->>>>>>> 4982c642eaf0b2f9792b351827687054f7f3be8a
 	
 	public Server(){
 		 //userConnect = new TreeMap<User, String>();
@@ -101,6 +96,7 @@ public class Server {
 						for(int i = 0; i < user.getListFriends().size(); i++){
 							outToClient.println(user.getListFriends().get(i));
 						}
+						outToClient.println(portUser);
 					}else{
 						
 						//SENHA OU USERNAME INCORRETO
@@ -124,6 +120,7 @@ public class Server {
 						}
 					}
 					outToClient.flush();
+					
 				}else if (msgUser.equals("off")){
 					System.out.println("OPERACAO: OFF");
 					msgUser = inFromClient.nextLine();
@@ -131,7 +128,22 @@ public class Server {
 					userConnect.remove(usr);
 					outToClient.println("-1");
 					outToClient.flush();
+					
+				}else if(msgUser.equals("data")){
+					System.out.println("DATA");
+					msgUser = inFromClient.nextLine();
+					User usr = findUser(new User(msgUser));
+					if(usr!=null){
+						String connected;
+						if(usr.isConnect()) connected = "0";
+						else connected = "1";
+						outToClient.println(usr.getIp()+","+usr.getPort());
+					}
+					else outToClient.println("");
+					outToClient.flush();
+					
 				}
+				
 			}
 		}catch(Exception e){
 				e.printStackTrace();

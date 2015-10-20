@@ -80,6 +80,11 @@ public class User implements Comparable<User> {
 		}
 	}
 	
+	public void setIp(String x) {
+		this.ip = x;
+		
+	}
+	
 	public List<User> getListFriends(){
 		return this.listFriends;
 	}
