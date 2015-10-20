@@ -4,7 +4,9 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -21,6 +23,7 @@ import socket.Server;
 
 public class WindowLogin extends JFrame implements ActionListener{
 
+	private static final long serialVersionUID = 1L;
 	private JTextField userField;
 	private JPasswordField passwordField;
 	private JLabel userLabel;
@@ -62,19 +65,24 @@ public class WindowLogin extends JFrame implements ActionListener{
 		if(e.getActionCommand().equals("Cancelar")){
 			userField.setText("");
 			passwordField.setText("");
-		}else{
+			
+		} else{
+			
+			Socket userSocket = null;
+			Scanner msgServer = null;
+			
 			try{
-				Socket userSocket = new Socket(Server.ADDRES, Server.PORT);
+				userSocket = new Socket(Server.ADDRES, Server.PORT);
 				PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
 				outServer.println("login");
-				outServer.println(userField.getText()+" "+passwordField.getText());
+				outServer.println(userField.getText()+" "+ new String(passwordField.getPassword()));
 				outServer.flush();
-				Scanner msgServer = new Scanner(userSocket.getInputStream());
+				
+				msgServer = new Scanner(userSocket.getInputStream());
 
 				User user = new User(userField.getText());
 				
-				// SERVIDOR RETORNA A PRIMEIRA LINHA COMO 1 (LOGIN FEITO COM SUCESSO)
-				// E RETORNA A LISTA DE AMIGOS DO CLIENTE
+				// Server returns 1 (Login successful) and the friends list
 				if(msgServer.nextLine().equals("1")){
 					int size = Integer.parseInt(msgServer.nextLine());
 					user.setConnect(true);
@@ -95,11 +103,14 @@ public class WindowLogin extends JFrame implements ActionListener{
 					//ENTAO CRII O OBJETO NO LADO CLIENTE COM BASE NA RESPOSTA DO SERVIDOR
 					new WindowListFriends(user);
 				}else{
-					//SERVIDOR RETORNOU ZERO (SENHA OU USUÁRIO INCORRETO)
-					new JOptionPane().showMessageDialog(this, "Usuário ou senha incorreto");
+					// Incorrect user or password
+					JOptionPane.showMessageDialog(this, "Usuário ou senha incorreto");
 				}
 			}catch(Exception exception){
-				exception.printStackTrace();
+				if(exception instanceof ConnectException){
+					JOptionPane.showMessageDialog(this, "Erro no estabelecimento da conexão, verifique se o servidor está rodando");
+				}
+				else exception.printStackTrace();
 			}
 		}
 	}

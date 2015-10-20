@@ -1,4 +1,6 @@
 package gui;
+import java.awt.Container;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 //import java.io.BufferedInputStream;
@@ -11,7 +13,11 @@ import java.net.Socket;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
+
+
 
 
 
@@ -36,15 +42,26 @@ public class WindowTalk extends JFrame implements ActionListener{
 	//
 	public WindowTalk(User usr,User selected){
 		super("Conversa com " +selected);
+		Container window = getContentPane();
+		window.setLayout(new GridLayout(usr.getListFriends().size(), 2,10,10));
 		conversa = new JTextArea();
 		conversa.setEditable(false);
 		msg = new JTextArea();
-		JButton button = new JButton();
+		JButton button = new JButton("Enviar");
 		button.setVisible(true);
 		button.addActionListener(this);
+		window.add(conversa);
+		window.add(msg);
+		window.add(new JScrollPane(conversa));
+		window.add(new JScrollPane(msg));
+		window.add(button);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(400, 200);
+		setVisible(true);
+		
 		try {
 			clientSocket = new Socket(selected.getIp(),2879);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, "Erro no estabelecimento da conexão com " + selected.getUserName());
 			e.printStackTrace();
 		}		

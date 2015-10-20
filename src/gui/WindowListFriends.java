@@ -21,6 +21,7 @@ import socket.ReceiveMsg;
 
 public class WindowListFriends extends JFrame implements ActionListener,ListSelectionListener{
 
+	private static final long serialVersionUID = 1L;
 	JList<User> friends;
 	JButton button;
 	User selected;
@@ -70,14 +71,12 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 			if(selected != null && !button.isEnabled() && selected.isConnect()) button.setEnabled(true);
 			else if (selected == null || !selected.isConnect()) button.setEnabled(false); 
 		}
-		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		WindowTalk chat = new WindowTalk(usr,selected);
 		listener.add(chat);
-		
-		
+		chat.setVisible(true);
 	}
 }
