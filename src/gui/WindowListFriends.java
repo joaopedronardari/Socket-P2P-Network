@@ -27,7 +27,6 @@ import socket.KeepAlive;
 import socket.ReceiveMsg;
 import socket.Server;
 
-import gui.WindowListFriends;
 
 public class WindowListFriends extends JFrame implements ActionListener,ListSelectionListener{
 
@@ -45,7 +44,7 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		window.setLayout(new GridLayout(usr.getListFriends().size()+2, 2,10,10));
 		
 		List<User> listFriends = usr.getListFriends();
-		DefaultListModel<User> listModel = generateListModel();
+		DefaultListModel<User> listModel = generateListModel(listFriends);
 		
 		listener = new ReceiveMsg(usr,listFriends);
 		listener.start();

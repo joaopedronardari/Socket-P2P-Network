@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 
 import entity.User;
+import gui.WindowListFriends;
 //
 public class KeepAlive implements Runnable {
 
@@ -35,9 +36,11 @@ public class KeepAlive implements Runnable {
 				int size = Integer.parseInt(msgServer.nextLine());
 				this.friends = new ArrayList<User>();
 				for( int j = 0; j < size; j++){
-					String[] parse = msgServer.nextLine().split(" - ");
+					String nextLine = msgServer.nextLine();
+					System.out.println(nextLine);
+					String[] parse = nextLine.split(",");
 					User friend = new User(parse[0]);
-					if(parse[1].equals("Offline")){
+					if(parse[1].equals("offline")){
 						friend.setConnect(false);
 					}else{
 						friend.setConnect(true);
@@ -48,7 +51,7 @@ public class KeepAlive implements Runnable {
 				if (this.friends != null) {
 					java.awt.EventQueue.invokeLater(new Runnable() {
 						public void run() {
-							windowListFriends.updateFriendsList(this.friends);
+							windowListFriends.updateFriendsList(friends);
 						}
 					});
 				}
@@ -60,7 +63,7 @@ public class KeepAlive implements Runnable {
 		}
 	}
 	
-	public List<String> getFriends(){
+	public List<User> getFriends(){
 		return this.friends;
 	}
 }
