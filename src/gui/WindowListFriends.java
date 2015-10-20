@@ -26,7 +26,6 @@ import entity.User;
 import socket.KeepAlive;
 import socket.ReceiveMsg;
 import socket.Server;
-import sun.awt.WindowClosingListener;
 
 public class WindowListFriends extends JFrame implements ActionListener,ListSelectionListener{
 
