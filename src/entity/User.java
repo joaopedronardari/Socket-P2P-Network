@@ -14,6 +14,7 @@ public class User implements Comparable<User> {
 	private List<User> listFriends;
 	private String ip;
 	private long lastKeepAlive;
+	private int port;
 	
 	public long getLastKeepAlive() {
 		return lastKeepAlive;
@@ -35,6 +36,13 @@ public class User implements Comparable<User> {
 		this(userName, "");
 	}
 
+	public void setPort(int port){
+		this.port = port;
+	}
+	
+	public int getPort(){
+		return this.port;
+	}
 	
 	public String getPassword() {
 		return password;
