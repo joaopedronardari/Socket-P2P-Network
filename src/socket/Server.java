@@ -52,7 +52,7 @@ public class Server {
 				Scanner inFromClient = new Scanner(connectionSocket.getInputStream());
 				PrintWriter outToClient = new PrintWriter(connectionSocket.getOutputStream());
 				String msgUser = inFromClient.nextLine();
-				System.out.println("SERVIDOR OPERCAO: "+msgUser);
+				//System.out.println("SERVIDOR OPERCAO: "+msgUser);
 				if(msgUser.equals("login")){
 					msgUser = inFromClient.nextLine();
 					String[] parse = msgUser.split(" ");
@@ -93,6 +93,13 @@ public class Server {
 						}
 						outToClient.flush();
 					}
+				}else if (msgUser.equals("off")){
+					System.out.println("OPERACAO: OFF");
+					msgUser = inFromClient.nextLine();
+					User usr = new User(msgUser);
+					userConnect.remove(usr);
+					outToClient.println("-1");
+					outToClient.flush();
 				}
 			}
 		}catch(Exception e){
