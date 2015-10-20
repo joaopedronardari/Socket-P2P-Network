@@ -13,7 +13,7 @@ import entity.User;
 public class Server {
 
 	public static final String ADDRES = "127.0.0.1";
-	public static final int PORT = 10000;
+	public static final int PORT = 10001;
 	private static TreeMap<User, String> userConnect;
 	
 	public Server(){

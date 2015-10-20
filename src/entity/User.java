@@ -6,6 +6,8 @@ import java.util.List;
 
 public class User implements Comparable<User> {
 
+	public static final int SOCKET_PORT = 2878;
+	
 	private String userName;
 	private String password; 
 	private boolean isConnect;

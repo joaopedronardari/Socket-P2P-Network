@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import javax.jws.soap.SOAPBinding.Use;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -65,7 +66,7 @@ public class WindowTalk extends JFrame implements ActionListener{
 		this.selected = selected;
 		
 		try {
-			clientSocket = new Socket(selected.getIp(),2879);
+			clientSocket = new Socket(selected.getIp(),User.SOCKET_PORT);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, "Erro no estabelecimento da conexão com " + selected.getUserName());
 			e.printStackTrace();
