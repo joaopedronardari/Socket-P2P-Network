@@ -31,7 +31,9 @@ public class KeepAlive implements Runnable {
 				int total = Integer.parseInt(msgServer.nextLine());
 				this.friends = new ArrayList<String>();
 				for(int i = 0; i < total; i++){
-					friends.add(msgServer.nextLine());
+					String nextLine = msgServer.nextLine();
+					friends.add(nextLine);
+					System.out.println(nextLine);
 				}
 				Thread.sleep(500);
 			}catch(Exception e){

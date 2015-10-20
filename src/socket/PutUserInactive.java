@@ -25,7 +25,7 @@ public class PutUserInactive implements Runnable {
 	}
 		
 	public void removeUserInactive() throws Exception{
-		System.out.println("remover usuários inativos");
+		System.out.println("Removing inactive users");
 		if (!listUser.isEmpty()) {
 			for (int i = 0; i < listUser.size(); i++) {
 				if ((System.currentTimeMillis() - listUser.get(i).getLastKeepAlive()) > 5000) {

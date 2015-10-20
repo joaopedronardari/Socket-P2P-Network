@@ -30,7 +30,7 @@ public class Server {
 	}
 	public static void addUser(User user){
 		user.setConnect(true);
-		System.out.println("Porta ao adicionar usuario"+user.getPort());
+		System.out.println("Adding user - port:"+user.getPort());
 		//userConnect.put(user, user.getIp());
 		userConnect.addElement(user);
 	}
@@ -93,9 +93,10 @@ public class Server {
 						outToClient.println("1");
 						outToClient.println(portUser);
 						outToClient.println(user.getListFriends().size());
+						System.out.println("Friends:");
 						for(int i = 0; i < user.getListFriends().size(); i++){
 							User us = user.getListFriends().get(i);
-							System.out.println("Estaos no servidor usuario"+us.getUserName()+" porta"+us.getPort()+" "+us.isConnect());
+							System.out.println(" --> user:"+us.getUserName()+" porta:"+us.getPort()+" connected:"+us.isConnect());
 							if(findUser(us) != null){
 								outToClient.println(us.getUserName()+",online,"+us.getIp()+","+us.getPort());
 							}else{
@@ -126,8 +127,8 @@ public class Server {
 					}
 					outToClient.flush();
 				}else if (msgUser.equals("off")){
-					System.out.println("OPERACAO: OFF");
 					msgUser = inFromClient.nextLine();
+					System.out.println("Logout - " + msgUser);
 					User usr = new User(msgUser);
 					userConnect.remove(usr);
 					outToClient.println("-1");
@@ -163,7 +164,7 @@ public class Server {
 								user.getListFriends().add(new User(friends[i]));
 							}
 						}
-						System.out.println("USUARIO FEZ LOGGIN");
+						System.out.println("Login - " + user.getUserName());
 						return user;
 					}
 			 }
