@@ -1,0 +1,20 @@
+// Login
+1
+<friendlistsize>
+<friendusername> - <status>
+<friendusername> - <status> ex: Guilherme
+...
+<port>
+
+// KeepAlive
+<friendlistsize>
+<friendusername>,<status>,<userip>
+
+// Logout
+-1
+
+// Data
+<userip>,<userport>
+
+// mensagem
+nada na resposta

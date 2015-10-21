@@ -1,0 +1,14 @@
+LOGIN
+<username>,<password>
+
+KEEPALIVE
+<username>
+
+LOGOUT
+<username>
+
+DATA
+<username>
+
+<msg>
+<username>
