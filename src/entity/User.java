@@ -87,6 +87,10 @@ public class User implements Comparable<User> {
 		return this.listFriends;
 	}
 	
+	public void setListFriends(List<User> listFriends){
+		this.listFriends = listFriends;
+	}
+	
 	@Override
 	public int compareTo(User user) {
 		return this.userName.compareTo(user.getUserName());

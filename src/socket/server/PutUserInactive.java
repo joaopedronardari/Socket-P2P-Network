@@ -1,4 +1,4 @@
-/**package socket.server;
+package socket.server;
 
 import java.util.Vector;
 import entity.User;
@@ -24,7 +24,7 @@ public class PutUserInactive implements Runnable {
 	}
 
 	public void removeUserInactive() throws Exception{
-		System.out.println("remover usuários inativos");
+		//System.out.println("remover usuários inativos");
 		if (!listUser.isEmpty()) {
 			for (int i = 0; i < listUser.size(); i++) {
 				if ((System.currentTimeMillis() - listUser.get(i).getLastKeepAlive()) > 5000) {
@@ -34,4 +34,4 @@ public class PutUserInactive implements Runnable {
 		}
 		Thread.sleep(5000);
 	}
-}*/
+}

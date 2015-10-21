@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -26,6 +27,11 @@ public class Server {
 	}
 
 	public static void startConnection() {
+		//INICIA UM THREAD QUE FICA PEGANDO USUÁRIO INATIVO 
+		PutUserInactive jobRemoveUser = new PutUserInactive(userConnect);
+		Thread thread = new Thread(jobRemoveUser);
+		thread.start();
+		
 		try{
 			// When finish program close loginSocket
 			ServerSocket loginSocket = new ServerSocket(Server.PORT);
@@ -77,10 +83,7 @@ public class Server {
 			outToClient.println("1");
 
 			// Send Friends List
-			outToClient.println(user.getListFriends().size());
-			for(int i = 0; i < user.getListFriends().size(); i++){
-				outToClient.println(user.getListFriends().get(i));
-			}
+			responseFriendList(user.getListFriends(), outToClient);
 
 			// Port set to this user
 			outToClient.println(portUser);
@@ -100,14 +103,7 @@ public class Server {
 		
 		if(user != null){
 			user.setLastKeepAlive(System.currentTimeMillis());
-			outToClient.println(user.getListFriends().size());
-			for(User us : user.getListFriends()){
-				if(findUser(us) != null){
-					outToClient.println(us.getUserName()+",online,"+us.getIp());
-				}else{
-					outToClient.println(us.getUserName()+",offline,"+us.getIp());
-				}
-			}
+			responseFriendList(user.getListFriends(), outToClient);
 		}
 		
 		outToClient.flush();
@@ -132,6 +128,18 @@ public class Server {
 		} else { outToClient.println(""); }
 		
 		outToClient.flush();
+	}
+	
+	private static void responseFriendList(List<User> friendsList, PrintWriter outToClient) {
+		outToClient.println(friendsList.size());
+		for(User us : friendsList){
+			User updatedUser = findUser(us);
+			if(updatedUser != null){
+				outToClient.println(us.getUserName()+",online,"+us.getIp());
+			}else{
+				outToClient.println(us.getUserName()+",offline,"+us.getIp());
+			}
+		}
 	}
 
 	private static User loginUser(String username, String password, String ip){
@@ -188,7 +196,7 @@ public class Server {
 				return userConnect.get(i).getIp();
 			}
 		}
-		return null;
+		return "";
 	} 
 
 	public static User findUser(User user){

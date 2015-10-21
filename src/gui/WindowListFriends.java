@@ -40,14 +40,15 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 	User user;
 	ReceiveMsg receiveMsg;
 	KeepAlive keepAlive;
+	List<User> listFriends;
 	
-	public WindowListFriends(User usr) {
-		super("Bem-Vindo " + usr.getUserName());
-		this.user = usr;
+	public WindowListFriends(User user) {
+		super("Bem-Vindo " + user.getUserName());
+		this.user = user;
 		Container window = getContentPane();
 		
 		// Get ListFriends
-		List<User> listFriends = usr.getListFriends();
+		listFriends = user.getListFriends();
 		
 		// Set WindowLayout
 		window.setLayout(new GridLayout(listFriends.size()+2, 2,10,10));
@@ -79,11 +80,11 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		setVisible(true);
 		
 		// Create ReceiveMsg Thread
-		receiveMsg = new ReceiveMsg(usr,listFriends);
+		receiveMsg = new ReceiveMsg(user,listFriends);
 		receiveMsg.start();
 		
 		// Create KeepAlive Thread
-		keepAlive = new KeepAlive(usr, this);
+		keepAlive = new KeepAlive(user, this);
 		Thread t1 = new Thread(keepAlive);
 		t1.start();
 	}
@@ -97,6 +98,7 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 	}
 
 	public void updateFriendsList(List<User> listFriends) {
+		user.setListFriends(listFriends);
 		listModel = generateListModel(listFriends);
 		
 		if (!friendsList.hasFocus()) {
