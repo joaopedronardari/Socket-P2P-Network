@@ -117,13 +117,13 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		Socket userSocket = null;
 		Scanner msgServer = null;
 		try{
+			userSocket = new Socket(Server.ADDRESS, Server.PORT);
 			PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
 			outServer.println(RequestType.LOGOUT.name());
 			outServer.println(user.getUserName());
 			outServer.flush();
 			msgServer = new Scanner(userSocket.getInputStream());
 			String msg = msgServer.nextLine();
-			System.out.println("AQUI PORRA!!! " + msg);
 			if(msg.equals("-1")){
 				new JOptionPane("Logoff feito com sucesso");
 				dispose();
