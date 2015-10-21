@@ -11,7 +11,7 @@ public class PutUserInactive implements Runnable {
 	public PutUserInactive(Vector<User>listUser) {
 		this.listUser = listUser;
 	}
-	
+
 	@Override
 	public void run() {
 		try {
@@ -22,7 +22,7 @@ public class PutUserInactive implements Runnable {
 			e.printStackTrace();
 		}
 	}
-		
+
 	public void removeUserInactive() throws Exception{
 		System.out.println("remover usuários inativos");
 		if (!listUser.isEmpty()) {
