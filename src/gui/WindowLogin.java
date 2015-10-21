@@ -17,7 +17,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import entity.User;
-import socket.Server;
+import socket.server.Server;
 
 
 public class WindowLogin extends JFrame implements ActionListener{

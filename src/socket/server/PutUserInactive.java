@@ -1,4 +1,4 @@
-package socket;
+package socket.server;
 
 import java.util.Vector;
 import entity.User;

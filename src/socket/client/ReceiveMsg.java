@@ -1,4 +1,4 @@
-package socket;
+package socket.client;
 
 import java.io.BufferedReader;
 

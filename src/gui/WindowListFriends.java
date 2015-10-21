@@ -22,9 +22,9 @@ import javax.swing.event.ListSelectionListener;
 
 
 import entity.User;
-import socket.KeepAlive;
-import socket.ReceiveMsg;
-import socket.Server;
+import socket.client.KeepAlive;
+import socket.client.ReceiveMsg;
+import socket.server.Server;
 
 
 public class WindowListFriends extends JFrame implements ActionListener,ListSelectionListener{

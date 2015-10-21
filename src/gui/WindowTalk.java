@@ -17,8 +17,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import socket.ReceiveMsg;
-import socket.Server;
+import socket.client.ReceiveMsg;
+import socket.server.Server;
 import entity.User;
 
 public class WindowTalk extends JFrame implements ActionListener{

@@ -1,4 +1,4 @@
-package socket;
+package socket.client;
 
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import entity.User;
 import gui.WindowListFriends;
+import socket.server.Server;
 
 public class KeepAlive implements Runnable {
 
