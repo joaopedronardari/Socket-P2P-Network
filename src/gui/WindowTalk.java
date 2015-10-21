@@ -30,7 +30,8 @@ public class WindowTalk extends JFrame implements ActionListener{
 	JButton sendMessageButton;
 	Socket clientSocket;
 	ReceiveMsg receber;
-	DataOutputStream outToServer;
+	PrintWriter outServer;
+	
 	BufferedReader inFromServer;
 	public JTextArea conversa;
 	
@@ -80,12 +81,13 @@ public class WindowTalk extends JFrame implements ActionListener{
 				selected.setPort(Integer.parseInt(parse[1]));
 				System.out.println(selected.getPort());
 				clientSocket = new Socket(selected.getIp(),selected.getPort());
-				outToServer = new DataOutputStream(clientSocket.getOutputStream());
+				//outToServer = new DataOutputStream(clientSocket.getOutputStream());
+				outServer = new PrintWriter(clientSocket.getOutputStream());
 				inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				if(!msg.getText().trim().isEmpty()){
-					outToServer.writeBytes(msg.getText());
-					outToServer.writeBytes(user.getUserName());
-					outToServer.flush();
+					outServer.println(msg.getText());
+					outServer.println(user.getUserName());
+					outServer.flush();
 					conversa.append("\n");
 					conversa.append(msg.getText());
 				}

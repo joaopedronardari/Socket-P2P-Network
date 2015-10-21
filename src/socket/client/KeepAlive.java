@@ -39,7 +39,7 @@ public class KeepAlive implements Runnable {
 				this.friends = new ArrayList<User>();
 				for( int j = 0; j < size; j++){
 					String nextLine = msgServer.nextLine();
-					System.out.println(nextLine);
+					//System.out.println(nextLine);
 					String[] parse = nextLine.split(",");
 					User friend = new User(parse[0]);
 					if(parse[1].equals("offline")){

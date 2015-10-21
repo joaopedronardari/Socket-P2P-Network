@@ -39,6 +39,7 @@ public class ReceiveMsg extends Thread{
 				BufferedReader inFromOthers = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 				String msg = inFromOthers.readLine();
 				String userName = inFromOthers.readLine();
+				System.out.println(msg + " - " + userName);
 				// Check if has window
 				boolean hasWindow = false;
 				
