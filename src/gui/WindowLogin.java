@@ -4,7 +4,6 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
@@ -75,7 +74,7 @@ public class WindowLogin extends JFrame implements ActionListener{
 				userSocket = new Socket(Server.ADDRES, Server.PORT);
 				PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
 				outServer.println("login");
-				outServer.println(userField.getText()+" "+ new String(passwordField.getPassword()));
+				outServer.println(userField.getText()+","+ new String(passwordField.getPassword()));
 				outServer.flush();
 				
 				msgServer = new Scanner(userSocket.getInputStream());
@@ -88,9 +87,9 @@ public class WindowLogin extends JFrame implements ActionListener{
 					int size = Integer.parseInt(msgServer.nextLine());
 					user.setConnect(true);
 					for( int j = 0; j < size; j++){
-						String[] parse = msgServer.nextLine().split(" - ");
+						String[] parse = msgServer.nextLine().split(",");
 						User friend = new User(parse[0]);
-						if(parse[1].equals("Offline")){
+						if(parse[1].equals("offline")){
 							friend.setConnect(false);
 						}else{
 							friend.setConnect(true);
@@ -100,10 +99,6 @@ public class WindowLogin extends JFrame implements ActionListener{
 					user.setPort(Integer.parseInt(msgServer.nextLine()));
 					System.out.println(user.getPort());
 					dispose();
-					//AVISO PARA O GUILHERME APAGAR O COMENTÁRIO DEPOIS.
-					//CARA O MÉTODO NECESSITA DE UM OBJETO DO TIPO USER
-					//MAS EU NÃO CONSIGO SERIALIZAR O OBJETO PARA PASSAR PELO SOCKET
-					//ENTAO CRII O OBJETO NO LADO CLIENTE COM BASE NA RESPOSTA DO SERVIDOR
 					new WindowListFriends(user);
 				}else{
 					// Incorrect user or password

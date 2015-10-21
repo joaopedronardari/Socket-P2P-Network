@@ -3,11 +3,9 @@ package socket;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.net.PortUnreachableException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
-import java.util.TreeMap;
 import java.util.Vector;
 
 import entity.User;
@@ -69,7 +67,6 @@ public class Server {
 		Thread thread = new Thread(jobRemoveUser);
 		thread.start();
 		
-		
 		User user = null;
 		// FIXME - Refactor Needed
 		 try{			
@@ -82,7 +79,7 @@ public class Server {
 				//System.out.println("SERVIDOR OPERCAO: "+msgUser);
 				if(msgUser.equals("login")){
 					msgUser = inFromClient.nextLine();
-					String[] parse = msgUser.split(" ");
+					String[] parse = msgUser.split(",");
 					user = loginUser(parse[0], parse[1]); 
 					if(user != null){
 						//FAZ O CONTROLE DA PORTA PARA CONVERSAR LOCALMENTE
