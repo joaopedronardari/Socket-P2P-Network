@@ -20,8 +20,6 @@ import javax.swing.JTextField;
 
 import entity.User;
 import socket.server.RequestType;
-//import socket.server.Server;
-
 
 public class WindowLogin extends JFrame implements ActionListener{
 
@@ -85,7 +83,13 @@ public class WindowLogin extends JFrame implements ActionListener{
 			Scanner msgServer = null;
 			
 			try{
-				//Server.ADDRESS = servidorField.getText();
+				if (userField.getText().isEmpty() ||
+						new String(passwordField.getPassword()).isEmpty() ||
+						servidorField.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(this, "Preencha todos os campos corretamente!");
+					return;
+				}
+				
 				userSocket = new Socket(servidorField.getText(), 10000);
 				PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
 				outServer.println(RequestType.LOGIN.name());

@@ -1,22 +1,42 @@
 // Login
 1
+
 <friendlistsize>
+
 <friendusername>,<status>,<friendip>,<friendport>
+
 <friendusername>,<status>,<friendip>,<friendport>
+
 ...
+
 <port>
 
+
+
 // KeepAlive
+
 <friendlistsize>
+
 <friendusername>,<status>,<friendip>,<friendport>
+
 <friendusername>,<status>,<friendip>,<friendport>
+
 ...
 
+
+
 // Logout
+
 -1
 
+
+
 // Data
+
 <userip>,<userport>
 
+
+
 // mensagem
+
 nada na resposta

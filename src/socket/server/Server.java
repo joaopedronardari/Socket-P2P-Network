@@ -67,6 +67,11 @@ public class Server {
 		}
 	}
 	
+	/**
+	 * Login
+	 * @param inFromClient
+	 * @param outToClient
+	 */
 	private static void processLoginRequest(Scanner inFromClient, PrintWriter outToClient) {
 		String msgUser = inFromClient.nextLine();
 		String[] parse = msgUser.split(",");
@@ -92,6 +97,11 @@ public class Server {
 		outToClient.flush();
 	}
 	
+	/**
+	 * KeepAlive
+	 * @param inFromClient
+	 * @param outToClient
+	 */
 	private static void processKeepAliveRequest(Scanner inFromClient, PrintWriter outToClient) {
 		String msgUser = inFromClient.nextLine();
 		User user = new User(msgUser);
@@ -105,6 +115,11 @@ public class Server {
 		outToClient.flush();
 	}
 	
+	/**
+	 * Logout
+	 * @param inFromClient
+	 * @param outToClient
+	 */
 	private static void processLogoutRequest(Scanner inFromClient, PrintWriter outToClient) {
 		String msgUser = inFromClient.nextLine();
 		User user = new User(msgUser);
@@ -114,6 +129,11 @@ public class Server {
 		System.out.println(user.getUserName() + " logout");
 	}
 	
+	/**
+	 * Data
+	 * @param inFromClient
+	 * @param outToClient
+	 */
 	private static void processDataRequest(Scanner inFromClient, PrintWriter outToClient) {
 		System.out.println("DATA");
 		String msgUser = inFromClient.nextLine();

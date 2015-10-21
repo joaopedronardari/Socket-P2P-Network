@@ -2,11 +2,13 @@ package socket.client;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 
 
 import entity.User;
@@ -76,7 +78,7 @@ public class KeepAlive implements Runnable {
 				}
 
 				if (this.friends != null) {
-					java.awt.EventQueue.invokeLater(new Runnable() {
+					java.awt.EventQueue.invokeAndWait(new Runnable() {
 						public void run() {
 							windowListFriends.updateFriendsList(friends);
 						}
@@ -86,11 +88,17 @@ public class KeepAlive implements Runnable {
 				Thread.sleep(500);
 				
 			} catch (ConnectException e) {
-				java.awt.EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						windowListFriends.serverDown();
-					}
-				});
+				try {
+					java.awt.EventQueue.invokeAndWait(new Runnable() {
+						public void run() {
+							windowListFriends.serverDown();
+						}
+					});
+				} catch (InvocationTargetException e1) {
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 				break;
 			} catch(Exception e){
 				e.printStackTrace();
