@@ -31,7 +31,6 @@ public class Server {
 	}
 
 	public static void startConnection() {
-		//INICIA UM THREAD QUE FICA PEGANDO USUÁRIO INATIVO 
 		PutUserInactive jobRemoveUser = new PutUserInactive(userConnect);
 		Thread thread = new Thread(jobRemoveUser);
 		thread.start();
