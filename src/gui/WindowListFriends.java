@@ -173,9 +173,9 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try{
-				socketLogoff();
 				receiveMsg.stopService();
 				keepAlive.stopService();
+				socketLogoff();
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}
