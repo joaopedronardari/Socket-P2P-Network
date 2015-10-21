@@ -43,11 +43,11 @@ public class ReceiveMsg extends Thread{
 				boolean hasWindow = false;
 				
 				for(int i = 0;i < conversas.size();i++){
-					WindowTalk talk = conversas.get(i);
-					if(talk.selected.getUserName().equals(userName)) {
-						talk.conversa.append("\n");
-						talk.conversa.append(msg);
-						System.out.println(talk.conversa.getText());
+					WindowTalk windowTalk = conversas.get(i);
+					if(windowTalk.selected.getUserName().equals(userName)) {
+						windowTalk.conversa.append("\n");
+						windowTalk.conversa.append(msg);
+						System.out.println(windowTalk.conversa.getText());
 						hasWindow = true;
 					}
 				}
