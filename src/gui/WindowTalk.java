@@ -52,7 +52,7 @@ public class WindowTalk extends JFrame implements ActionListener{
 		window.add(new JScrollPane(msg));
 		window.add(sendMessageButton);
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(400, 200);
 		setVisible(true);
 		
@@ -98,16 +98,7 @@ public class WindowTalk extends JFrame implements ActionListener{
 			JOptionPane.showMessageDialog(this, "Erro no estabelecimento da conexão com " + selected.getUserName());
 			e1.printStackTrace();
 			dispose();
-		}finally{
-			if (msgServer != null) { msgServer.close(); }
-		
-			try {
-				if(clientSocket != null) { clientSocket.close(); }
-			} catch (IOException e2) {
-				e2.printStackTrace();
-			}
-		}
-				
+		}		
 	}
 		
 }
