@@ -18,6 +18,8 @@ public class ReceiveMsg extends Thread{
 	String msg;
 	List<User> friends;
 	
+	boolean run = false;
+	
 	public ReceiveMsg(User usr,List<User> friends){
 		this.user = usr;
 		conversas = new ArrayList<WindowTalk>();
@@ -28,13 +30,18 @@ public class ReceiveMsg extends Thread{
 		conversas.add(t);
 	}
 	
+	public void stopService() {
+		this.run = false;
+	}
+	
 	@Override
 	public void run(){
+		ServerSocket welcome = null;
+		run = true;
 		try {
-			// FIXME - Close Welcome Socket
-			ServerSocket welcome = new ServerSocket(user.getPort());
+			welcome = new ServerSocket(user.getPort());
 			System.out.println(user.getPort());
-			while(true){
+			while(run){
 				Socket connection = welcome.accept();
 				BufferedReader inFromOthers = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 				String msg = inFromOthers.readLine();
@@ -68,6 +75,14 @@ public class ReceiveMsg extends Thread{
 			}
 		} catch (IOException e1) {
 			e1.printStackTrace();
+		} finally {
+			if (welcome != null) {
+				try {
+					welcome.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 

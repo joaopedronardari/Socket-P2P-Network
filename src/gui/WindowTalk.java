@@ -97,6 +97,7 @@ public class WindowTalk extends JFrame implements ActionListener{
 		} catch (Exception e1) {
 			JOptionPane.showMessageDialog(this, "Erro no estabelecimento da conexão com " + selected.getUserName());
 			e1.printStackTrace();
+			dispose();
 		}finally{
 			try {
 				if(clientSocket != null) { clientSocket.close(); }

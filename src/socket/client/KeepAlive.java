@@ -1,6 +1,8 @@
 package socket.client;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,22 +20,30 @@ public class KeepAlive implements Runnable {
 	WindowListFriends windowListFriends;
 	List<User> friends;
 	
+	boolean run = true;
+	
 	public KeepAlive(User user, WindowListFriends windowListFriends){
 		this.user = user;
 		this.windowListFriends = windowListFriends;
 	}
 	
+	public void stopService() { 
+		this.run = false;
+	}
+	
 	@Override
 	public void run() {
-		// FIXME - Refactor needed Close socket and scanner
-		while(true){
+		Socket userSocket = null;
+		run = true;
+		while(run){
+			Scanner msgServer = null;
 			try{
-				Socket userSocket = new Socket(Server.ADDRESS, Server.PORT);
+				userSocket = new Socket(Server.ADDRESS, Server.PORT);
 				PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
 				outServer.println(RequestType.KEEPALIVE.name());
 				outServer.println(user.getUserName());
 				outServer.flush();
-				Scanner msgServer = new Scanner(userSocket.getInputStream());
+				msgServer = new Scanner(userSocket.getInputStream());
 				
 				// FIXME - Duplicated Code
 				int size = Integer.parseInt(msgServer.nextLine());
@@ -60,7 +70,25 @@ public class KeepAlive implements Runnable {
 				}
 
 				Thread.sleep(500);
-			}catch(Exception e){
+				
+			} catch (ConnectException e) {
+				java.awt.EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						windowListFriends.serverDown();
+					}
+				});
+				break;
+			} catch(Exception e){
+				e.printStackTrace();
+			} finally {
+				msgServer.close();
+			}
+		}
+		
+		if (userSocket != null) {
+			try {
+				userSocket.close();
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}

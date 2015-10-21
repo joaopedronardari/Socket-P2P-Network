@@ -103,6 +103,11 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		}
 	}
 	
+	public void serverDown() {
+		new WindowLogin();
+		dispose();
+	}
+	
 	private void socketLogoff(){
 		try{
 			Socket userSocket = new Socket(Server.ADDRESS, Server.PORT);
