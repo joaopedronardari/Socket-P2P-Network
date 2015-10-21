@@ -32,6 +32,7 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 
 	private static final long serialVersionUID = 1L;
 	JList<User> friends;
+	DefaultListModel<User> listModel;
 	JButton button;
 	User selected;
 	User usr;
@@ -82,8 +83,11 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 	}
 
 	public void updateFriendsList(List<User> listFriends) {
-		DefaultListModel<User> listModel = generateListModel(listFriends);
-		friends.setModel(listModel);
+		listModel = generateListModel(listFriends);
+		
+		if (!friends.hasFocus()) {
+			friends.setModel(listModel);
+		}
 	}
 	
 	private void socketLogoff(){
