@@ -20,9 +20,8 @@ public class Server {
 	private static Vector<User> userConnect;
 	
 	public Server(){
-		 //userConnect = new TreeMap<User, String>();
 		userConnect = new Vector<User>();
-		 startConnection();
+		startConnection();
 	}
 	public static void addUser(User user){
 		user.setConnect(true);
@@ -75,27 +74,36 @@ public class Server {
 				Scanner inFromClient = new Scanner(connectionSocket.getInputStream());
 				PrintWriter outToClient = new PrintWriter(connectionSocket.getOutputStream());
 				String msgUser = inFromClient.nextLine();
-				//System.out.println("SERVIDOR OPERCAO: "+msgUser);
+				
 				if(msgUser.equals("login")){
 					msgUser = inFromClient.nextLine();
 					String[] parse = msgUser.split(",");
-					user = loginUser(parse[0], parse[1]); 
-					if(user != null){
-						//FAZ O CONTROLE DA PORTA PARA CONVERSAR LOCALMENTE
+					user = loginUser(parse[0], parse[1]);
+					
+					if(user != null) {
+						
+						// Control ports to use in same machine
 						portUser += 1;
+						
+						// Set Port
 						user.setPort(portUser);
-						//MENSAGEM IGUAL 1 LOGIN FEITO COM SUCESSO
-						//CONCATENA A LISTA DE AMIGOS
+						// Set KeepAlive
 						user.setLastKeepAlive(System.currentTimeMillis());
+						
+						// Username and Password ok
 						outToClient.println("1");
+						
+						// Send Friends List
 						outToClient.println(user.getListFriends().size());
 						for(int i = 0; i < user.getListFriends().size(); i++){
 							outToClient.println(user.getListFriends().get(i));
 						}
-						outToClient.println(portUser);
-					}else{
 						
-						//SENHA OU USERNAME INCORRETO
+						// Port set to this user
+						outToClient.println(portUser);
+						
+					} else{
+						// Wrong user or password
 						outToClient.println("0");
 					}
 					outToClient.flush();
