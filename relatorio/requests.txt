@@ -1,0 +1,37 @@
+// Login
+
+LOGIN
+
+<username>,<password>,<ip>
+
+
+
+// Keep alive
+
+KEEPALIVE
+
+<username>
+
+
+
+// Logout
+
+LOGOUT
+
+<username>
+
+
+
+// Data
+
+DATA
+
+<username>
+
+
+
+// Send Message
+
+<msg>
+
+<username>
