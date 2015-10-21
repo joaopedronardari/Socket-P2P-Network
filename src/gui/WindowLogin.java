@@ -89,7 +89,7 @@ public class WindowLogin extends JFrame implements ActionListener{
 				
 				// Server returns 1 (Login successful) and the friends list
 				if(msgServer.nextLine().equals("1")){
-					// FIXME - Duplicated Code
+					
 					int size = Integer.parseInt(msgServer.nextLine());
 					user.setConnect(true);
 					for( int j = 0; j < size; j++){
@@ -100,7 +100,17 @@ public class WindowLogin extends JFrame implements ActionListener{
 						}else{
 							friend.setConnect(true);
 						}
-						user.setIp(parse[2]);
+						
+						// Update IP
+						if (parse[2] != null) {
+							friend.setIp(parse[2]);
+						}
+						
+						// Update Port
+						if (parse[3] != null) {
+							friend.setPort(Integer.parseInt(parse[3]));
+						}
+						
 						user.getListFriends().add(friend);
 					}
 					user.setPort(Integer.parseInt(msgServer.nextLine()));

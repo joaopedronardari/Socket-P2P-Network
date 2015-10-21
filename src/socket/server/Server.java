@@ -69,14 +69,6 @@ public class Server {
 		User user = loginUser(parse[0], parse[1], parse[2]);
 
 		if(user != null) {
-			// Control ports to use in same machine
-			portUser += 1;
-
-			// Set Port
-			user.setPort(portUser);
-			// Set KeepAlive
-			user.setLastKeepAlive(System.currentTimeMillis());
-			
 			System.out.println(user.getUserName() + " login on " + user.getIp() + ":" + user.getPort());
 			
 			// Username and Password ok
@@ -135,9 +127,9 @@ public class Server {
 		for(User us : friendsList){
 			User updatedUser = findUser(us);
 			if(updatedUser != null){
-				outToClient.println(us.getUserName()+",online,"+us.getIp());
+				outToClient.println(updatedUser.getUserName()+",online,"+updatedUser.getIp()+","+updatedUser.getPort());
 			}else{
-				outToClient.println(us.getUserName()+",offline,"+us.getIp());
+				outToClient.println(us.getUserName()+",offline,"+us.getIp()+","+us.getPort());
 			}
 		}
 	}
@@ -152,6 +144,14 @@ public class Server {
 					User user = new User(username, password);
 					user.setConnect(true);
 					user.setIp(ip);
+					
+					// Control ports to use in same machine
+					portUser += 1;
+
+					// Set Port
+					user.setPort(portUser);
+					// Set KeepAlive
+					user.setLastKeepAlive(System.currentTimeMillis());
 					
 					addUser(user);
 

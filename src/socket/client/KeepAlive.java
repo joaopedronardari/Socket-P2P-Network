@@ -45,7 +45,6 @@ public class KeepAlive implements Runnable {
 				outServer.flush();
 				msgServer = new Scanner(userSocket.getInputStream());
 				
-				// FIXME - Duplicated Code
 				int size = Integer.parseInt(msgServer.nextLine());
 				this.friends = new ArrayList<User>();
 				for( int j = 0; j < size; j++){
@@ -53,15 +52,24 @@ public class KeepAlive implements Runnable {
 					System.out.println(nextLine);
 					String[] parse = nextLine.split(",");
 					User friend = new User(parse[0]);
+					
+					// Update Status Connected
 					if(parse[1].equals("offline")){
 						friend.setConnect(false);
 					}else{
 						friend.setConnect(true);
 					}
 					
+					// Update IP
 					if (parse[2] != null) {
 						friend.setIp(parse[2]);
 					}
+					
+					// Update Port
+					if (parse[3] != null) {
+						friend.setPort(Integer.parseInt(parse[3]));
+					}
+					
 					friends.add(friend);
 				}
 
