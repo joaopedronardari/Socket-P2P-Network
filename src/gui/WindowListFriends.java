@@ -4,7 +4,7 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
@@ -38,7 +38,8 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 	
 	User selectedUser;
 	User user;
-	ReceiveMsg receiveMsgListener;
+	ReceiveMsg receiveMsg;
+	KeepAlive keepAlive;
 	
 	public WindowListFriends(User usr) {
 		super("Bem-Vindo " + usr.getUserName());
@@ -78,11 +79,11 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		setVisible(true);
 		
 		// Create ReceiveMsg Thread
-		receiveMsgListener = new ReceiveMsg(usr,listFriends);
-		receiveMsgListener.start();
+		receiveMsg = new ReceiveMsg(usr,listFriends);
+		receiveMsg.start();
 		
 		// Create KeepAlive Thread
-		KeepAlive keepAlive = new KeepAlive(usr, this);
+		keepAlive = new KeepAlive(usr, this);
 		Thread t1 = new Thread(keepAlive);
 		t1.start();
 	}
@@ -104,24 +105,40 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 	}
 	
 	public void serverDown() {
+		receiveMsg.stopService();
+		keepAlive.stopService();
 		new WindowLogin();
 		dispose();
 	}
 	
 	private void socketLogoff(){
+		Socket userSocket = null;
+		Scanner msgServer = null;
 		try{
-			Socket userSocket = new Socket(Server.ADDRESS, Server.PORT);
+			userSocket = new Socket(Server.ADDRESS, Server.PORT);
 			PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
 			outServer.println(RequestType.LOGOUT.name());
 			outServer.println(user.getUserName());
 			outServer.flush();
-			Scanner msgServer = new Scanner(userSocket.getInputStream());
+			msgServer = new Scanner(userSocket.getInputStream());
 			if(msgServer.nextLine().equals("-1")){
 				new JOptionPane("Logoff feito com sucesso");
 				dispose();
 			}
 		}catch(Exception e){
 			e.printStackTrace();
+		} finally {
+			if (msgServer != null) {
+				msgServer.close();
+			}
+			
+			if (userSocket != null) {
+				try {
+					userSocket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -143,7 +160,7 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		WindowTalk chat = new WindowTalk(user,selectedUser);
-		receiveMsgListener.add(chat);
+		receiveMsg.add(chat);
 		chat.setVisible(true);
 	}
 	
@@ -155,6 +172,8 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		public void actionPerformed(ActionEvent e) {
 			try{
 				socketLogoff();
+				receiveMsg.stopService();
+				keepAlive.stopService();
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}

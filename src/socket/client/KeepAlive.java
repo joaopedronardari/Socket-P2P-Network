@@ -81,7 +81,7 @@ public class KeepAlive implements Runnable {
 			} catch(Exception e){
 				e.printStackTrace();
 			} finally {
-				msgServer.close();
+				if (msgServer != null) { msgServer.close(); }
 			}
 		}
 		

@@ -65,14 +65,14 @@ public class WindowTalk extends JFrame implements ActionListener{
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		Scanner msgServer = null;
 		try {
 			Socket receiveData = new Socket(Server.ADDRESS,Server.PORT);
 			PrintWriter writeToServer = new PrintWriter(receiveData.getOutputStream());
 			writeToServer.println(RequestType.DATA.name());
 			writeToServer.println(selected.getUserName());
 			writeToServer.flush();
-			// FIXME - Warning close MSGServer when close window
-			Scanner msgServer = new Scanner(receiveData.getInputStream());
+			msgServer = new Scanner(receiveData.getInputStream());
 			String adress = msgServer.nextLine();
 			String[] parse = adress.split(",");
 			receiveData.close();
@@ -99,6 +99,8 @@ public class WindowTalk extends JFrame implements ActionListener{
 			e1.printStackTrace();
 			dispose();
 		}finally{
+			if (msgServer != null) { msgServer.close(); }
+		
 			try {
 				if(clientSocket != null) { clientSocket.close(); }
 			} catch (IOException e2) {
