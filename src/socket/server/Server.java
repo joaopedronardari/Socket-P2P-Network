@@ -11,7 +11,7 @@ import java.util.Vector;
 import entity.User;
 
 public class Server {
-
+	
 	public static final String ADDRESS = "127.0.0.1";
 	public static final int PORT = 10000;
 	
@@ -36,16 +36,22 @@ public class Server {
 				Socket connectionSocket = loginSocket.accept();
 				Scanner inFromClient = new Scanner(connectionSocket.getInputStream());
 				PrintWriter outToClient = new PrintWriter(connectionSocket.getOutputStream());
-				String msgUser = inFromClient.nextLine();
 
-				if(msgUser.equals("login")){
+				RequestType requestTypeReceived = Enum.valueOf(RequestType.class, inFromClient.nextLine());
+				
+				switch (requestTypeReceived) {
+				case LOGIN:
 					processLoginRequest(inFromClient, outToClient);
-				}else if(msgUser.equals("keepalive")){
+					break;
+				case KEEPALIVE:
 					processKeepAliveRequest(inFromClient, outToClient);
-				}else if (msgUser.equals("off")){
+					break;
+				case LOGOUT:
 					processLogoutRequest(inFromClient, outToClient);
-				}else if(msgUser.equals("data")){
+					break;
+				case DATA:
 					processDataRequest(inFromClient, outToClient);
+					break;
 				}
 			}
 		}catch(Exception e){

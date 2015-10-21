@@ -17,6 +17,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import entity.User;
+import socket.server.RequestType;
 import socket.server.Server;
 
 
@@ -75,7 +76,7 @@ public class WindowLogin extends JFrame implements ActionListener{
 			try{
 				userSocket = new Socket(Server.ADDRESS, Server.PORT);
 				PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
-				outServer.println("login");
+				outServer.println(RequestType.LOGIN.name());
 				outServer.println(userField.getText()+","+ new String(passwordField.getPassword()));
 				outServer.flush();
 				

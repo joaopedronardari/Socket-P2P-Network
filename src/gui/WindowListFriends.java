@@ -24,6 +24,7 @@ import javax.swing.event.ListSelectionListener;
 import entity.User;
 import socket.client.KeepAlive;
 import socket.client.ReceiveMsg;
+import socket.server.RequestType;
 import socket.server.Server;
 
 
@@ -106,7 +107,7 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		try{
 			Socket userSocket = new Socket(Server.ADDRESS, Server.PORT);
 			PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
-			outServer.println("off");
+			outServer.println(RequestType.LOGOUT.name());
 			outServer.println(user.getUserName());
 			outServer.flush();
 			Scanner msgServer = new Scanner(userSocket.getInputStream());

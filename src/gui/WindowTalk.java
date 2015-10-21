@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import socket.client.ReceiveMsg;
+import socket.server.RequestType;
 import socket.server.Server;
 import entity.User;
 
@@ -67,7 +68,7 @@ public class WindowTalk extends JFrame implements ActionListener{
 		try {
 			Socket receiveData = new Socket(Server.ADDRESS,Server.PORT);
 			PrintWriter writeToServer = new PrintWriter(receiveData.getOutputStream());
-			writeToServer.println("data");
+			writeToServer.println(RequestType.DATA.name());
 			writeToServer.println(selected.getUserName());
 			writeToServer.flush();
 			// FIXME - Warning close MSGServer when close window

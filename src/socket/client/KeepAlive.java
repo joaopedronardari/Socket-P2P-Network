@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import entity.User;
 import gui.WindowListFriends;
+import socket.server.RequestType;
 import socket.server.Server;
 
 public class KeepAlive implements Runnable {
@@ -29,7 +30,7 @@ public class KeepAlive implements Runnable {
 			try{
 				Socket userSocket = new Socket(Server.ADDRESS, Server.PORT);
 				PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
-				outServer.println("keepalive");
+				outServer.println(RequestType.KEEPALIVE.name());
 				outServer.println(user.getUserName());
 				outServer.flush();
 				Scanner msgServer = new Scanner(userSocket.getInputStream());
