@@ -28,12 +28,11 @@ import socket.server.RequestType;
 //import socket.server.Server;
 
 
-public class WindowListFriends extends JFrame implements ActionListener,ListSelectionListener{
+public class WindowListFriends extends JFrame implements ListSelectionListener{
 
 	private static final long serialVersionUID = 1L;
 	JList<User> friendsList;
 	DefaultListModel<User> listModel;
-	JButton talkButton;
 	JButton logoutButton;
 	
 	User selectedUser;
@@ -54,11 +53,6 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		
 		// Set WindowLayout
 		window.setLayout(new GridLayout(listFriends.size()+2, 2,10,10));
-		
-		// Create Talk Button
-		talkButton = new JButton("Conversar");
-		talkButton.setEnabled(false);
-		talkButton.addActionListener(this);
 
 		// Create Logout Button
 		logoutButton = new JButton("Desconectar");
@@ -73,7 +67,6 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		// Add Components
 		window.add(friendsList);
 		window.add(new JScrollPane(friendsList));
-		window.add(talkButton);
 		window.add(logoutButton);
 		
 		// Window Properties
@@ -102,10 +95,7 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 	public void updateFriendsList(List<User> listFriends) {
 		user.setListFriends(listFriends);
 		listModel = generateListModel(listFriends);
-		
-		if (!friendsList.hasFocus()) {
-			friendsList.setModel(listModel);
-		}
+		friendsList.setModel(listModel);
 	}
 	
 	public void serverDown() {
@@ -154,22 +144,20 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		if(!e.getValueIsAdjusting()){
-			selectedUser = friendsList.getSelectedValue();
-			if(selectedUser != null && !talkButton.isEnabled() && selectedUser.isConnect()) talkButton.setEnabled(true);
-			else if (selectedUser == null || !selectedUser.isConnect()) talkButton.setEnabled(false); 
+			User friendFromList = friendsList.getSelectedValue();
+			if(friendFromList != null) {
+				selectedUser = friendFromList;
+				if (selectedUser.isConnect()) {
+					WindowTalk chat = new WindowTalk(user,selectedUser,WindowListFriends.this,ipServer);
+					receiveMsg.add(chat);
+					chat.setVisible(true);
+				} else {
+					JOptionPane.showMessageDialog(this, selectedUser.getUserName() + " está offline");
+				}
+			}
 		}
 	}
 	
-	/**
-	 * Click in "Conversar"
-	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		WindowTalk chat = new WindowTalk(user,selectedUser,WindowListFriends.this,ipServer);
-		receiveMsg.add(chat);
-		chat.setVisible(true);
-	}
-
 	public void removeWindowTalk(WindowTalk windowTalk) {
 		receiveMsg.remove(windowTalk);
 	}
