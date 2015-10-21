@@ -14,7 +14,8 @@ public class Server {
 
 	public static final String ADDRES = "127.0.0.1";
 	public static final int PORT = 10000;
-	//PORTA UTILIZADA PARA CONVERSAR COM OUTRO USUÁRIO LOCALMENTE
+	
+	// Port used to use users in machine
 	private static int portUser = 6000;
 
 	private static Vector<User> userConnect;
@@ -41,82 +42,94 @@ public class Server {
 				String msgUser = inFromClient.nextLine();
 
 				if(msgUser.equals("login")){
-					msgUser = inFromClient.nextLine();
-					String[] parse = msgUser.split(",");
-					user = loginUser(parse[0], parse[1]);
-
-					if(user != null) {
-
-						// Control ports to use in same machine
-						portUser += 1;
-
-						// Set Port
-						user.setPort(portUser);
-						// Set KeepAlive
-						user.setLastKeepAlive(System.currentTimeMillis());
-
-						// Username and Password ok
-						outToClient.println("1");
-
-						// Send Friends List
-						outToClient.println(user.getListFriends().size());
-						for(int i = 0; i < user.getListFriends().size(); i++){
-							outToClient.println(user.getListFriends().get(i));
-						}
-
-						// Port set to this user
-						outToClient.println(portUser);
-
-					} else{
-						// Wrong user or password
-						outToClient.println("0");
-					}
-					outToClient.flush();
-				}	
-				else if(msgUser.equals("keepalive")){
-					msgUser = inFromClient.nextLine();
-					User usr = new User(msgUser);
-					usr = findUser(usr);
-					if(usr != null){
-						usr.setLastKeepAlive(System.currentTimeMillis());
-						outToClient.println(usr.getListFriends().size());
-						for(User us : usr.getListFriends()){
-							if(findUser(us) != null){
-								outToClient.println(us.getUserName()+",online,"+us.getIp());
-							}else{
-								outToClient.println(us.getUserName()+",offline,"+us.getIp());
-							}
-						}
-					}
-					outToClient.flush();
-
+					processLoginRequest(inFromClient, outToClient);
+				}else if(msgUser.equals("keepalive")){
+					processKeepAliveRequest(inFromClient, outToClient);
 				}else if (msgUser.equals("off")){
-					System.out.println("OPERACAO: OFF");
-					msgUser = inFromClient.nextLine();
-					User usr = new User(msgUser);
-					userConnect.remove(usr);
-					outToClient.println("-1");
-					outToClient.flush();
-
+					processLogoutRequest(inFromClient, outToClient);
 				}else if(msgUser.equals("data")){
-					System.out.println("DATA");
-					msgUser = inFromClient.nextLine();
-					User usr = findUser(new User(msgUser));
-					if(usr!=null){
-						String connected;
-						if(usr.isConnect()) connected = "0";
-						else connected = "1";
-						outToClient.println(usr.getIp()+","+usr.getPort());
-					}
-					else outToClient.println("");
-					outToClient.flush();
-
+					processDataRequest(inFromClient, outToClient);
 				}
 
 			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	private static void processLoginRequest(Scanner inFromClient, PrintWriter outToClient) {
+		String msgUser = inFromClient.nextLine();
+		String[] parse = msgUser.split(",");
+		User user = loginUser(parse[0], parse[1]);
+
+		if(user != null) {
+
+			// Control ports to use in same machine
+			portUser += 1;
+
+			// Set Port
+			user.setPort(portUser);
+			// Set KeepAlive
+			user.setLastKeepAlive(System.currentTimeMillis());
+
+			// Username and Password ok
+			outToClient.println("1");
+
+			// Send Friends List
+			outToClient.println(user.getListFriends().size());
+			for(int i = 0; i < user.getListFriends().size(); i++){
+				outToClient.println(user.getListFriends().get(i));
+			}
+
+			// Port set to this user
+			outToClient.println(portUser);
+
+		} else{
+			// Wrong user or password
+			outToClient.println("0");
+		}
+		
+		outToClient.flush();
+	}
+	
+	private static void processKeepAliveRequest(Scanner inFromClient, PrintWriter outToClient) {
+		String msgUser = inFromClient.nextLine();
+		User user = new User(msgUser);
+		user = findUser(user);
+		
+		if(user != null){
+			user.setLastKeepAlive(System.currentTimeMillis());
+			outToClient.println(user.getListFriends().size());
+			for(User us : user.getListFriends()){
+				if(findUser(us) != null){
+					outToClient.println(us.getUserName()+",online,"+us.getIp());
+				}else{
+					outToClient.println(us.getUserName()+",offline,"+us.getIp());
+				}
+			}
+		}
+		
+		outToClient.flush();
+	}
+	
+	private static void processLogoutRequest(Scanner inFromClient, PrintWriter outToClient) {
+		String msgUser = inFromClient.nextLine();
+		User usr = new User(msgUser);
+		userConnect.remove(usr);
+		outToClient.println("-1");
+		outToClient.flush();
+	}
+	
+	private static void processDataRequest(Scanner inFromClient, PrintWriter outToClient) {
+		System.out.println("DATA");
+		String msgUser = inFromClient.nextLine();
+		User user = findUser(new User(msgUser));
+		
+		if(user!=null){
+			outToClient.println(user.getIp()+","+user.getPort());
+		} else { outToClient.println(""); }
+		
+		outToClient.flush();
 	}
 
 	private static User loginUser(String username, String password){
@@ -141,8 +154,6 @@ public class Server {
 						}
 						user.getListFriends().add(usr);
 					}
-
-					System.out.println(user.getUserName() + " Logged");
 					return user;
 				}
 			}
@@ -194,6 +205,5 @@ public class Server {
 
 	public static void main(String[] args) {
 		new Server();
-
 	}
 }
