@@ -32,6 +32,6 @@ public class PutUserInactive implements Runnable {
 				}
 			}
 		}
-		Thread.sleep(5000);
+		Thread.sleep(500);
 	}
 }

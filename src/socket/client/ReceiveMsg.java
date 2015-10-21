@@ -11,6 +11,7 @@ import java.util.List;
 
 import entity.User;
 import gui.WindowTalk;
+import gui.WindowListFriends;
 
 public class ReceiveMsg extends Thread{
 	User user;

@@ -80,7 +80,7 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		setVisible(true);
 		
 		// Create ReceiveMsg Thread
-		receiveMsg = new ReceiveMsg(user,listFriends);
+		receiveMsg = new ReceiveMsg(user,listFriends, this);
 		receiveMsg.start();
 		
 		// Create KeepAlive Thread
@@ -163,7 +163,7 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		WindowTalk chat = new WindowTalk(user,selectedUser,windowListFriends);
+		WindowTalk chat = new WindowTalk(user,selectedUser,WindowListFriends.this);
 		receiveMsg.add(chat);
 		chat.setVisible(true);
 	}
