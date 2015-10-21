@@ -27,6 +27,8 @@ public class WindowLogin extends JFrame implements ActionListener{
 	private JPasswordField passwordField;
 	private JLabel userLabel;
 	private JLabel passwordLabel;
+	private JButton buttonCancel;
+	private JButton buttonConnect;
 	private Container window;
 	
 	public WindowLogin() {
@@ -40,19 +42,20 @@ public class WindowLogin extends JFrame implements ActionListener{
 		passwordLabel = new JLabel("Senha: ");
 		passwordLabel.setToolTipText("Digite a senha");
 		
+		buttonCancel = new JButton("Limpar");
+		buttonCancel.addActionListener(this);
+		
+		buttonConnect = new JButton("Conectar");
+		buttonConnect.addActionListener(this);
+		
 		window = getContentPane();
 		window.setLayout(new GridLayout(4, 2,10,10));
 		window.add(userLabel);
 		window.add(userField);
 		window.add(passwordLabel);
 		window.add(passwordField);
-		JButton buttonCancel = new JButton("Cancelar");
-		buttonCancel.addActionListener(this);
-		
 		window.add(buttonCancel);		
-		JButton buttonConection = new JButton("Conectar");
-		buttonConection.addActionListener(this);
-		window.add(buttonConection);
+		window.add(buttonConnect);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(400, 200);
@@ -61,10 +64,9 @@ public class WindowLogin extends JFrame implements ActionListener{
 		
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().equals("Cancelar")){
+		if(e.getActionCommand().equals("Limpar")){
 			userField.setText("");
 			passwordField.setText("");
-			
 		} else{
 			
 			Socket userSocket = null;
@@ -105,7 +107,6 @@ public class WindowLogin extends JFrame implements ActionListener{
 					JOptionPane.showMessageDialog(this, "Usuário ou senha incorreto");
 				}
 			}catch(Exception exception){
-
 				if(exception instanceof ConnectException){
 					JOptionPane.showMessageDialog(this, "Erro no estabelecimento da conexão, verifique o servidor");
 				}

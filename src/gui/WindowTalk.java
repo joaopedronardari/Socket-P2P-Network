@@ -27,6 +27,7 @@ public class WindowTalk extends JFrame implements ActionListener{
 	User user;
 	public User selected;
 	JTextArea msg;
+	JButton sendMessageButton;
 	Socket clientSocket;
 	ReceiveMsg receber;
 	DataOutputStream outToServer;
@@ -43,15 +44,15 @@ public class WindowTalk extends JFrame implements ActionListener{
 		conversa.setEditable(false);
 		msg = new JTextArea();
 		
-		JButton button = new JButton("Enviar");
-		button.setVisible(true);
-		button.addActionListener(this);
+		sendMessageButton = new JButton("Enviar");
+		sendMessageButton.setVisible(true);
+		sendMessageButton.addActionListener(this);
 		
 		window.add(conversa);
 		window.add(msg);
 		window.add(new JScrollPane(conversa));
 		window.add(new JScrollPane(msg));
-		window.add(button);
+		window.add(sendMessageButton);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(400, 200);
@@ -82,9 +83,8 @@ public class WindowTalk extends JFrame implements ActionListener{
 				outToServer = new DataOutputStream(clientSocket.getOutputStream());
 				inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				if(!msg.getText().trim().isEmpty()){
-					String send = "msg////" + msg.getText() + "////" +user.getUserName()+ "\n";
-					System.out.println(send);
-					outToServer.writeBytes(send);
+					outToServer.writeBytes(msg.getText());
+					outToServer.writeBytes(user.getUserName());
 					outToServer.flush();
 					conversa.append("\n");
 					conversa.append(msg.getText());
@@ -96,12 +96,10 @@ public class WindowTalk extends JFrame implements ActionListener{
 		} catch (Exception e1) {
 			JOptionPane.showMessageDialog(this, "Erro no estabelecimento da conexão com " + selected.getUserName());
 			e1.printStackTrace();
-		
 		}finally{
 			try {
-				if(clientSocket != null)clientSocket.close();
+				if(clientSocket != null) { clientSocket.close(); }
 			} catch (IOException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			}
 		}

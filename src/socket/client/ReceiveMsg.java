@@ -2,7 +2,6 @@ package socket.client;
 
 import java.io.BufferedReader;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -31,39 +30,36 @@ public class ReceiveMsg extends Thread{
 	
 	@Override
 	public void run(){
-		// FIXME - Refactor Needed
+		// FIXME - Close Welcome Socket
 		try {
 			ServerSocket welcome = new ServerSocket(user.getPort());
 			System.out.println(user.getPort());
 			while(true){
 				Socket connection = welcome.accept();
 				BufferedReader inFromOthers = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				DataOutputStream outToOthers = new DataOutputStream(connection.getOutputStream());
 				String msg = inFromOthers.readLine();
-				System.out.println(msg);
-				String[]parse = msg.split("////");
-				
+				String userName = inFromOthers.readLine();
 				// Check if has window
 				boolean hasWindow = false;
 				
 				for(int i = 0;i < conversas.size();i++){
 					WindowTalk talk = conversas.get(i);
-					if(talk.selected.getUserName().equals(parse[2])) {
+					if(talk.selected.getUserName().equals(userName)) {
 						talk.conversa.append("\n");
-						talk.conversa.append(parse[1]);
+						talk.conversa.append(msg);
 						System.out.println(talk.conversa.getText());
 						hasWindow = true;
 					}
 				}
 				
 				if (!hasWindow) {
-					User compare = new User(parse[2]);
+					User compare = new User(userName);
 					for(int j = 0;j < friends.size();j++){
 						User aux = friends.get(j);
 						if(compare.compareTo(aux) == 0){
 							WindowTalk newTalk = new WindowTalk(user,aux);
 							newTalk.setVisible(true);
-							newTalk.conversa.append(parse[1]);
+							newTalk.conversa.append(msg);
 							conversas.add(newTalk);
 						}
 					}
