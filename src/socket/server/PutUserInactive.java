@@ -1,4 +1,4 @@
-package socket.server;
+/**package socket.server;
 
 import java.util.Vector;
 import entity.User;
@@ -34,4 +34,4 @@ public class PutUserInactive implements Runnable {
 		}
 		Thread.sleep(5000);
 	}
-}
+}*/

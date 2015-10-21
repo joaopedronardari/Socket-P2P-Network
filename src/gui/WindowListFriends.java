@@ -104,7 +104,7 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 	
 	private void socketLogoff(){
 		try{
-			Socket userSocket = new Socket(Server.ADDRES, Server.PORT);
+			Socket userSocket = new Socket(Server.ADDRESS, Server.PORT);
 			PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
 			outServer.println("off");
 			outServer.println(user.getUserName());

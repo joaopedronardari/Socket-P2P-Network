@@ -3,10 +3,7 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
@@ -31,12 +28,11 @@ public class WindowTalk extends JFrame implements ActionListener{
 	Socket clientSocket;
 	ReceiveMsg receber;
 	PrintWriter outServer;
-	
-	BufferedReader inFromServer;
+
 	public JTextArea conversa;
 	
 	public WindowTalk(User user,User selected){
-		super("Conversa com " +selected);
+		super("Conversa com " + selected.getUserName());
 		
 		Container window = getContentPane();
 		window.setLayout(new GridLayout(user.getListFriends().size(), 2,10,10));
@@ -63,14 +59,18 @@ public class WindowTalk extends JFrame implements ActionListener{
 		this.selected = selected;
 	}	
 	
+	/**
+	 * Send Data Button action
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		try {
-			Socket receiveData = new Socket(Server.ADDRES,Server.PORT);
+			Socket receiveData = new Socket(Server.ADDRESS,Server.PORT);
 			PrintWriter writeToServer = new PrintWriter(receiveData.getOutputStream());
 			writeToServer.println("data");
 			writeToServer.println(selected.getUserName());
 			writeToServer.flush();
+			// FIXME - Warning close MSGServer when close window
 			Scanner msgServer = new Scanner(receiveData.getInputStream());
 			String adress = msgServer.nextLine();
 			String[] parse = adress.split(",");
@@ -81,9 +81,7 @@ public class WindowTalk extends JFrame implements ActionListener{
 				selected.setPort(Integer.parseInt(parse[1]));
 				System.out.println(selected.getPort());
 				clientSocket = new Socket(selected.getIp(),selected.getPort());
-				//outToServer = new DataOutputStream(clientSocket.getOutputStream());
 				outServer = new PrintWriter(clientSocket.getOutputStream());
-				inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				if(!msg.getText().trim().isEmpty()){
 					outServer.println(msg.getText());
 					outServer.println(user.getUserName());

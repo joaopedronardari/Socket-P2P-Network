@@ -24,10 +24,10 @@ public class KeepAlive implements Runnable {
 	
 	@Override
 	public void run() {
-		// FIXME - Refactor needed
+		// FIXME - Refactor needed Close socket and scanner
 		while(true){
 			try{
-				Socket userSocket = new Socket(Server.ADDRES, Server.PORT);
+				Socket userSocket = new Socket(Server.ADDRESS, Server.PORT);
 				PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
 				outServer.println("keepalive");
 				outServer.println(user.getUserName());

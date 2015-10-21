@@ -73,7 +73,7 @@ public class WindowLogin extends JFrame implements ActionListener{
 			Scanner msgServer = null;
 			
 			try{
-				userSocket = new Socket(Server.ADDRES, Server.PORT);
+				userSocket = new Socket(Server.ADDRESS, Server.PORT);
 				PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
 				outServer.println("login");
 				outServer.println(userField.getText()+","+ new String(passwordField.getPassword()));

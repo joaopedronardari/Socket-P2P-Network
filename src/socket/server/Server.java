@@ -12,7 +12,7 @@ import entity.User;
 
 public class Server {
 
-	public static final String ADDRES = "127.0.0.1";
+	public static final String ADDRESS = "127.0.0.1";
 	public static final int PORT = 10000;
 	
 	// Port used to use users in machine
@@ -26,15 +26,12 @@ public class Server {
 	}
 
 	public static void startConnection() {
-		//INICIA UM THREAD QUE FICA PEGANDO USUÁRIO INATIVO 
-		PutUserInactive jobRemoveUser = new PutUserInactive(userConnect);
-		Thread thread = new Thread(jobRemoveUser);
-		thread.start();
 
-		User user = null;
 		// FIXME - Refactor Needed - SPAGHETTI CODE
-		try{			
+		try{
+			// When finish program close loginSocket
 			ServerSocket loginSocket = new ServerSocket(Server.PORT);
+			System.out.println("Server is running on " + ADDRESS + ":" + PORT);
 			while(true){
 				Socket connectionSocket = loginSocket.accept();
 				Scanner inFromClient = new Scanner(connectionSocket.getInputStream());
@@ -50,7 +47,6 @@ public class Server {
 				}else if(msgUser.equals("data")){
 					processDataRequest(inFromClient, outToClient);
 				}
-
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -64,6 +60,8 @@ public class Server {
 
 		if(user != null) {
 
+			System.out.println(user.getUserName() + " logged");
+			
 			// Control ports to use in same machine
 			portUser += 1;
 

@@ -30,8 +30,8 @@ public class ReceiveMsg extends Thread{
 	
 	@Override
 	public void run(){
-		// FIXME - Close Welcome Socket
 		try {
+			// FIXME - Close Welcome Socket
 			ServerSocket welcome = new ServerSocket(user.getPort());
 			System.out.println(user.getPort());
 			while(true){
