@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintWriter;
 import java.net.ConnectException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -77,7 +78,9 @@ public class WindowLogin extends JFrame implements ActionListener{
 				userSocket = new Socket(Server.ADDRESS, Server.PORT);
 				PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
 				outServer.println(RequestType.LOGIN.name());
-				outServer.println(userField.getText()+","+ new String(passwordField.getPassword()));
+				outServer.println(userField.getText()+","+
+				new String(passwordField.getPassword())+","+
+				InetAddress.getLocalHost().getHostAddress());
 				outServer.flush();
 				
 				msgServer = new Scanner(userSocket.getInputStream());

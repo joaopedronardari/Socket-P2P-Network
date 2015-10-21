@@ -26,8 +26,6 @@ public class Server {
 	}
 
 	public static void startConnection() {
-
-		// FIXME - Refactor Needed - SPAGHETTI CODE
 		try{
 			// When finish program close loginSocket
 			ServerSocket loginSocket = new ServerSocket(Server.PORT);
@@ -62,12 +60,9 @@ public class Server {
 	private static void processLoginRequest(Scanner inFromClient, PrintWriter outToClient) {
 		String msgUser = inFromClient.nextLine();
 		String[] parse = msgUser.split(",");
-		User user = loginUser(parse[0], parse[1]);
+		User user = loginUser(parse[0], parse[1], parse[2]);
 
 		if(user != null) {
-
-			System.out.println(user.getUserName() + " logged");
-			
 			// Control ports to use in same machine
 			portUser += 1;
 
@@ -75,7 +70,9 @@ public class Server {
 			user.setPort(portUser);
 			// Set KeepAlive
 			user.setLastKeepAlive(System.currentTimeMillis());
-
+			
+			System.out.println(user.getUserName() + " login on " + user.getIp() + ":" + user.getPort());
+			
 			// Username and Password ok
 			outToClient.println("1");
 
@@ -118,10 +115,11 @@ public class Server {
 	
 	private static void processLogoutRequest(Scanner inFromClient, PrintWriter outToClient) {
 		String msgUser = inFromClient.nextLine();
-		User usr = new User(msgUser);
-		userConnect.remove(usr);
+		User user = new User(msgUser);
+		userConnect.remove(user);
 		outToClient.println("-1");
 		outToClient.flush();
+		System.out.println(user.getUserName() + " logout");
 	}
 	
 	private static void processDataRequest(Scanner inFromClient, PrintWriter outToClient) {
@@ -136,8 +134,7 @@ public class Server {
 		outToClient.flush();
 	}
 
-	private static User loginUser(String username, String password){
-		// FIXME - Refactor needed
+	private static User loginUser(String username, String password, String ip){
 		Scanner scanner = null;
 		try{
 			scanner = new Scanner(new File("usuarios.txt"));
@@ -146,7 +143,8 @@ public class Server {
 				if(line[0].equals(username) && line[1].equals(password)){
 					User user = new User(username, password);
 					user.setConnect(true);
-
+					user.setIp(ip);
+					
 					addUser(user);
 
 					String[] friends = line[2].split(" ");
@@ -172,13 +170,10 @@ public class Server {
 	}
 
 	public static void addUser(User user){
-		user.setConnect(true);
-		//userConnect.put(user, user.getIp());
 		userConnect.addElement(user);
 	}
 
 	public static boolean isConnect(User user){
-		//return userConnect.containsKey(user);
 		for(int i = 0; i < userConnect.size(); i++){
 			if(userConnect.get(i).getUserName().equals(user.getUserName())){
 				return true;
@@ -188,7 +183,6 @@ public class Server {
 	}
 
 	public static String getIpUser(User user){
-		//return userConnect.get(user.getIp());
 		for(int i = 0; i < userConnect.size(); i++){
 			if(userConnect.get(i).getUserName().equals(user.getUserName())){
 				return userConnect.get(i).getIp();
@@ -198,7 +192,6 @@ public class Server {
 	} 
 
 	public static User findUser(User user){
-		//return userConnect.get(user);
 		for(int i = 0; i < userConnect.size(); i++){
 			if(userConnect.get(i).getUserName().equals(user.getUserName())){
 				return userConnect.get(i);

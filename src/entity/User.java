@@ -21,7 +21,6 @@ public class User implements Comparable<User> {
 		setUserName(userName);
 		setPassword(password);
 		setConnect(false);
-		setIp();
 	}
 
 	public User(String userName){
@@ -72,13 +71,13 @@ public class User implements Comparable<User> {
 		return ip;
 	}
 
-	public void setIp() {
+	/*public void setIp() {
 		try {
 			this.ip = InetAddress.getLocalHost().getHostAddress();
 		} catch (UnknownHostException e) {
 			System.out.println("UnknownHost");
 		}
-	}
+	}*/
 	
 	public void setIp(String ip) {
 		this.ip = ip;
