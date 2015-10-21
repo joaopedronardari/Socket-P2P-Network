@@ -16,14 +16,6 @@ public class User implements Comparable<User> {
 	private long lastKeepAlive;
 	private int port;
 	
-	public long getLastKeepAlive() {
-		return lastKeepAlive;
-	}
-
-	public void setLastKeepAlive(long lastKeepAlive) {
-		this.lastKeepAlive = lastKeepAlive;
-	}
-
 	public User(String userName, String password){
 		listFriends = new LinkedList<User>();
 		setUserName(userName);
@@ -35,13 +27,13 @@ public class User implements Comparable<User> {
 	public User(String userName){
 		this(userName, "");
 	}
-
-	public void setPort(int port){
-		this.port = port;
-	}
 	
-	public int getPort(){
-		return this.port;
+	public long getLastKeepAlive() {
+		return lastKeepAlive;
+	}
+
+	public void setLastKeepAlive(long lastKeepAlive) {
+		this.lastKeepAlive = lastKeepAlive;
 	}
 	
 	public String getPassword() {
@@ -52,6 +44,14 @@ public class User implements Comparable<User> {
 		this.password = password;
 	}
 
+	public void setPort(int port){
+		this.port = port;
+	}
+	
+	public int getPort(){
+		return this.port;
+	}
+	
 	public String getUserName() {
 		return userName;
 	}
@@ -80,8 +80,8 @@ public class User implements Comparable<User> {
 		}
 	}
 	
-	public void setIp(String x) {
-		this.ip = x;
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 	
 	public List<User> getListFriends(){
@@ -101,7 +101,5 @@ public class User implements Comparable<User> {
 	public String toString(){
 		return this.getUserName()+" - "+getStringStatus();
 	}
-	
 
-	
 }
