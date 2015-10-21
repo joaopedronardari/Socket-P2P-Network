@@ -1,14 +1,16 @@
 // Login
 1
 <friendlistsize>
-<friendusername> - <status>
-<friendusername> - <status> ex: Guilherme
+<friendusername>,<status>,<friendip>,<friendport>
+<friendusername>,<status>,<friendip>,<friendport>
 ...
 <port>
 
 // KeepAlive
 <friendlistsize>
-<friendusername>,<status>,<userip>
+<friendusername>,<status>,<friendip>,<friendport>
+<friendusername>,<status>,<friendip>,<friendport>
+...
 
 // Logout
 -1
