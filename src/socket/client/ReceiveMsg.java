@@ -17,17 +17,23 @@ public class ReceiveMsg extends Thread{
 	List<WindowTalk> conversas;
 	String msg;
 	List<User> friends;
+	WindowListFriends windowListFriends;
 	
 	boolean run = false;
 	
-	public ReceiveMsg(User usr,List<User> friends){
+	public ReceiveMsg(User usr,List<User> friends,WindowListFriends windowListFriends){
 		this.user = usr;
 		conversas = new ArrayList<WindowTalk>();
 		this.friends = friends;
+		this.windowListFriends = windowListFriends;
 	}
 	
 	public void add(WindowTalk t){
 		conversas.add(t);
+	}
+
+	public void remove(WindowTalk t){
+		conversas.remove(t);
 	}
 	
 	public void stopService() {
@@ -65,7 +71,7 @@ public class ReceiveMsg extends Thread{
 					for(int j = 0;j < friends.size();j++){
 						User aux = friends.get(j);
 						if(compare.compareTo(aux) == 0){
-							WindowTalk newTalk = new WindowTalk(user,aux);
+							WindowTalk newTalk = new WindowTalk(user,aux,windowListFriends);
 							newTalk.setVisible(true);
 							newTalk.conversa.append(msg);
 							conversas.add(newTalk);

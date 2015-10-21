@@ -126,7 +126,6 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 			String msg = msgServer.nextLine();
 			if(msg.equals("-1")){
 				new JOptionPane("Logoff feito com sucesso");
-				dispose();
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -142,6 +141,8 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 					e.printStackTrace();
 				}
 			}
+
+			System.exit(0);
 		}
 	}
 
@@ -162,9 +163,13 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		WindowTalk chat = new WindowTalk(user,selectedUser);
+		WindowTalk chat = new WindowTalk(user,selectedUser,windowListFriends);
 		receiveMsg.add(chat);
 		chat.setVisible(true);
+	}
+
+	public void removeWindowTalk(WindowTalk windowTalk) {
+		receiveMsg.remove(windowTalk);
 	}
 	
 	/**

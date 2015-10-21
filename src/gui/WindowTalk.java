@@ -18,6 +18,7 @@ import socket.client.ReceiveMsg;
 import socket.server.RequestType;
 import socket.server.Server;
 import entity.User;
+import gui.WindowListFriends;
 
 public class WindowTalk extends JFrame implements ActionListener{
 
@@ -31,8 +32,9 @@ public class WindowTalk extends JFrame implements ActionListener{
 	PrintWriter outServer;
 
 	public JTextArea conversa;
+	WindowListFriends windowListFriends;
 	
-	public WindowTalk(User user,User selected){
+	public WindowTalk(User user,User selected,WindowListFriends windowListFriends){
 		super("Conversa com " + selected.getUserName());
 		
 		Container window = getContentPane();
@@ -52,12 +54,19 @@ public class WindowTalk extends JFrame implements ActionListener{
 		window.add(new JScrollPane(msg));
 		window.add(sendMessageButton);
 		
-		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				windowListFriends.removeWindowTalk(WindowTalk.this);
+			}
+		});
+
 		setSize(400, 200);
 		setVisible(true);
 		
 		this.user     = user;
 		this.selected = selected;
+		this.windowListFriends = windowListFriends;
 	}	
 	
 	/**
