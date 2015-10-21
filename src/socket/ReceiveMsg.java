@@ -1,6 +1,7 @@
 package socket;
 
 import java.io.BufferedReader;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import entity.User;
 import gui.WindowTalk;
+
 public class ReceiveMsg extends Thread{
 	User user;
 	List<WindowTalk> conversas;
@@ -68,7 +70,6 @@ public class ReceiveMsg extends Thread{
 				}
 			}
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}

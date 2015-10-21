@@ -9,12 +9,13 @@ import java.util.Scanner;
 
 import entity.User;
 import gui.WindowListFriends;
-//
+
 public class KeepAlive implements Runnable {
 
 	User user;
 	WindowListFriends windowListFriends;
 	List<User> friends;
+	
 	public KeepAlive(User user, WindowListFriends windowListFriends){
 		this.user = user;
 		this.windowListFriends = windowListFriends;

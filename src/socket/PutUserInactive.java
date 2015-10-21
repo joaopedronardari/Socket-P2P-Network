@@ -1,10 +1,9 @@
 package socket;
 
-import java.util.TreeMap;
 import java.util.Vector;
-
 import entity.User;
 
+// FIXME Refactor Needed
 public class PutUserInactive implements Runnable {
 
 	Vector<User> listUser;
@@ -12,7 +11,7 @@ public class PutUserInactive implements Runnable {
 	public PutUserInactive(Vector<User>listUser) {
 		this.listUser = listUser;
 	}
-	//
+	
 	@Override
 	public void run() {
 		try {

@@ -16,14 +16,13 @@ public class Server {
 	public static final int PORT = 10000;
 	//PORTA UTILIZADA PARA CONVERSAR COM OUTRO USUÁRIO LOCALMENTE
 	private static int portUser = 6000;
-	//private static TreeMap<User, String> userConnect;
 	
 	private static Vector<User> userConnect;
 	
 	public Server(){
 		 //userConnect = new TreeMap<User, String>();
 		userConnect = new Vector<User>();
-		 starConnection();
+		 startConnection();
 	}
 	public static void addUser(User user){
 		user.setConnect(true);
@@ -61,14 +60,14 @@ public class Server {
 		return null;
 	}
 	
-	public static void starConnection() {
+	public static void startConnection() {
 		//INICIA UM THREAD QUE FICA PEGANDO USUÁRIO INATIVO 
 		PutUserInactive jobRemoveUser = new PutUserInactive(userConnect);
 		Thread thread = new Thread(jobRemoveUser);
 		thread.start();
 		
 		User user = null;
-		// FIXME - Refactor Needed
+		// FIXME - Refactor Needed - SPAGHETTI CODE
 		 try{			
 			ServerSocket loginSocket = new ServerSocket(Server.PORT);
 			while(true){
