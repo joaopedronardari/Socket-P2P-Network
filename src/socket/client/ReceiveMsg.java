@@ -19,14 +19,16 @@ public class ReceiveMsg extends Thread{
 	String msg;
 	List<User> friends;
 	WindowListFriends windowListFriends;
+	String ipServer;
 	
 	boolean run = false;
 	
-	public ReceiveMsg(User usr,List<User> friends,WindowListFriends windowListFriends){
+	public ReceiveMsg(User usr,List<User> friends,WindowListFriends windowListFriends,String ipServer){
 		this.user = usr;
 		conversas = new ArrayList<WindowTalk>();
 		this.friends = friends;
 		this.windowListFriends = windowListFriends;
+		this.ipServer = ipServer;
 	}
 	
 	public void add(WindowTalk t){
@@ -72,7 +74,7 @@ public class ReceiveMsg extends Thread{
 					for(int j = 0;j < friends.size();j++){
 						User aux = friends.get(j);
 						if(compare.compareTo(aux) == 0){
-							WindowTalk newTalk = new WindowTalk(user,aux,windowListFriends);
+							WindowTalk newTalk = new WindowTalk(user,aux,windowListFriends,ipServer);
 							newTalk.setVisible(true);
 							newTalk.conversa.append(msg);
 							conversas.add(newTalk);

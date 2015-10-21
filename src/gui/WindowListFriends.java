@@ -25,7 +25,7 @@ import entity.User;
 import socket.client.KeepAlive;
 import socket.client.ReceiveMsg;
 import socket.server.RequestType;
-import socket.server.Server;
+//import socket.server.Server;
 
 
 public class WindowListFriends extends JFrame implements ActionListener,ListSelectionListener{
@@ -41,10 +41,12 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 	ReceiveMsg receiveMsg;
 	KeepAlive keepAlive;
 	List<User> listFriends;
+	String ipServer;
 	
-	public WindowListFriends(User user) {
+	public WindowListFriends(User user,String ipServer) {
 		super("Bem-Vindo " + user.getUserName());
 		this.user = user;
+		this.ipServer = ipServer;
 		Container window = getContentPane();
 		
 		// Get ListFriends
@@ -80,11 +82,11 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		setVisible(true);
 		
 		// Create ReceiveMsg Thread
-		receiveMsg = new ReceiveMsg(user,listFriends, this);
+		receiveMsg = new ReceiveMsg(user,listFriends, this,ipServer);
 		receiveMsg.start();
 		
 		// Create KeepAlive Thread
-		keepAlive = new KeepAlive(user, this);
+		keepAlive = new KeepAlive(user, this,ipServer);
 		Thread t1 = new Thread(keepAlive);
 		t1.start();
 	}
@@ -117,7 +119,7 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 		Socket userSocket = null;
 		Scanner msgServer = null;
 		try{
-			userSocket = new Socket(Server.ADDRESS, Server.PORT);
+			userSocket = new Socket(ipServer, 10000);
 			PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
 			outServer.println(RequestType.LOGOUT.name());
 			outServer.println(user.getUserName());
@@ -163,7 +165,7 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		WindowTalk chat = new WindowTalk(user,selectedUser,WindowListFriends.this);
+		WindowTalk chat = new WindowTalk(user,selectedUser,WindowListFriends.this,ipServer);
 		receiveMsg.add(chat);
 		chat.setVisible(true);
 	}

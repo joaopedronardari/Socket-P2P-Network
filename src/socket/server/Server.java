@@ -3,8 +3,10 @@ package socket.server;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Vector;
@@ -13,7 +15,7 @@ import entity.User;
 
 public class Server {
 	
-	public static final String ADDRESS = "127.0.0.1";
+	public static String ADDRESS;
 	public static final int PORT = 10000;
 	
 	// Port used to use users in machine
@@ -21,7 +23,9 @@ public class Server {
 
 	private static Vector<User> userConnect;
 
-	public Server(){
+	public Server() throws UnknownHostException{
+		ADDRESS = InetAddress.getLocalHost().getHostAddress();
+		
 		userConnect = new Vector<User>();
 		startConnection();
 	}
@@ -159,8 +163,10 @@ public class Server {
 
 					for(int i = 0; i < friends.length; i++){
 						User usr = new User(friends[i]);
-						if(findUser(usr) != null){
+						User aux = findUser(usr);
+						if(aux != null){
 							usr.setConnect(true);
+							usr.setPort(aux.getPort());
 						}
 						user.getListFriends().add(usr);
 					}
@@ -208,7 +214,8 @@ public class Server {
 		return null;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnknownHostException {
 		new Server();
+		
 	}
 }

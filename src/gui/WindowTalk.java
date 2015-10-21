@@ -3,7 +3,7 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+//import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
@@ -16,7 +16,7 @@ import javax.swing.JTextArea;
 
 import socket.client.ReceiveMsg;
 import socket.server.RequestType;
-import socket.server.Server;
+//import socket.server.Server;
 import entity.User;
 import gui.WindowListFriends;
 
@@ -30,13 +30,13 @@ public class WindowTalk extends JFrame implements ActionListener{
 	Socket clientSocket;
 	ReceiveMsg receber;
 	PrintWriter outServer;
-
+	String ipServer;
 	public JTextArea conversa;
 	WindowListFriends windowListFriends;
 	
-	public WindowTalk(User user,User selected,WindowListFriends windowListFriends){
+	public WindowTalk(User user,User selected,final WindowListFriends windowListFriends,String ipServer){
 		super("Conversa com " + selected.getUserName());
-		
+		this.ipServer = ipServer;
 		Container window = getContentPane();
 		window.setLayout(new GridLayout(user.getListFriends().size(), 2,10,10));
 		
@@ -76,7 +76,7 @@ public class WindowTalk extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		Scanner msgServer = null;
 		try {
-			Socket receiveData = new Socket(Server.ADDRESS,Server.PORT);
+			Socket receiveData = new Socket(ipServer,10000);
 			PrintWriter writeToServer = new PrintWriter(receiveData.getOutputStream());
 			writeToServer.println(RequestType.DATA.name());
 			writeToServer.println(selected.getUserName());
@@ -85,7 +85,10 @@ public class WindowTalk extends JFrame implements ActionListener{
 			String adress = msgServer.nextLine();
 			String[] parse = adress.split(",");
 			receiveData.close();
-			if(parse.length != 2) JOptionPane.showMessageDialog(this, "Amigo não encontrado");
+			if(parse.length != 2){
+				JOptionPane.showMessageDialog(this, "Amigo está offline");
+				dispose();
+			}
 			else{
 				selected.setIp(parse[0]);
 				selected.setPort(Integer.parseInt(parse[1]));

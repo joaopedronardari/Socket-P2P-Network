@@ -12,19 +12,21 @@ import java.util.Scanner;
 import entity.User;
 import gui.WindowListFriends;
 import socket.server.RequestType;
-import socket.server.Server;
+//import socket.server.Server;
 
 public class KeepAlive implements Runnable {
 
 	User user;
 	WindowListFriends windowListFriends;
 	List<User> friends;
+	String ipServer;
 	
 	boolean run = true;
 	
-	public KeepAlive(User user, WindowListFriends windowListFriends){
+	public KeepAlive(User user, WindowListFriends windowListFriends,String ipServer){
 		this.user = user;
 		this.windowListFriends = windowListFriends;
+		this.ipServer = ipServer;
 	}
 	
 	public void stopService() { 
@@ -38,7 +40,7 @@ public class KeepAlive implements Runnable {
 		while(run){
 			Scanner msgServer = null;
 			try{
-				userSocket = new Socket(Server.ADDRESS, Server.PORT);
+				userSocket = new Socket(ipServer, 10000);
 				PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
 				outServer.println(RequestType.KEEPALIVE.name());
 				outServer.println(user.getUserName());

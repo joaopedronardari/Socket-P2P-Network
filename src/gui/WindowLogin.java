@@ -5,9 +5,10 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintWriter;
-import java.net.ConnectException;
+//import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
+//import java.net.SocketException;
 import java.util.Scanner;
 
 import javax.swing.JButton;
@@ -19,16 +20,18 @@ import javax.swing.JTextField;
 
 import entity.User;
 import socket.server.RequestType;
-import socket.server.Server;
+//import socket.server.Server;
 
 
 public class WindowLogin extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	private JTextField userField;
+	private JTextField servidorField;
 	private JPasswordField passwordField;
 	private JLabel userLabel;
 	private JLabel passwordLabel;
+	private JLabel servidorLabel;
 	private JButton buttonCancel;
 	private JButton buttonConnect;
 	private Container window;
@@ -44,6 +47,10 @@ public class WindowLogin extends JFrame implements ActionListener{
 		passwordLabel = new JLabel("Senha: ");
 		passwordLabel.setToolTipText("Digite a senha");
 		
+		servidorField = new JTextField();
+		servidorLabel = new JLabel("IP Servidor");
+		servidorLabel.setToolTipText("Digite o IP do servidor");
+		
 		buttonCancel = new JButton("Limpar");
 		buttonCancel.addActionListener(this);
 		
@@ -56,6 +63,8 @@ public class WindowLogin extends JFrame implements ActionListener{
 		window.add(userField);
 		window.add(passwordLabel);
 		window.add(passwordField);
+		window.add(servidorLabel);
+		window.add(servidorField);
 		window.add(buttonCancel);		
 		window.add(buttonConnect);
 		
@@ -69,13 +78,15 @@ public class WindowLogin extends JFrame implements ActionListener{
 		if(e.getActionCommand().equals("Limpar")){
 			userField.setText("");
 			passwordField.setText("");
+			servidorField.setText("");
 		} else{
 			
 			Socket userSocket = null;
 			Scanner msgServer = null;
 			
 			try{
-				userSocket = new Socket(Server.ADDRESS, Server.PORT);
+				//Server.ADDRESS = servidorField.getText();
+				userSocket = new Socket(servidorField.getText(), 10000);
 				PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
 				outServer.println(RequestType.LOGIN.name());
 				outServer.println(userField.getText()+","+
@@ -116,16 +127,15 @@ public class WindowLogin extends JFrame implements ActionListener{
 					user.setPort(Integer.parseInt(msgServer.nextLine()));
 					
 					dispose();
-					new WindowListFriends(user);
+					new WindowListFriends(user,servidorField.getText());
 				}else{
 					// Incorrect user or password
 					JOptionPane.showMessageDialog(this, "Usuário ou senha incorreto");
 				}
 			}catch(Exception exception){
-				if(exception instanceof ConnectException){
-					JOptionPane.showMessageDialog(this, "Erro no estabelecimento da conexão, verifique o servidor");
-				}
-				else exception.printStackTrace();
+				JOptionPane.showMessageDialog(this, "Erro no estabelecimento da conexão, verifique o IP/Servidor");
+				
+				exception.printStackTrace();
 			}
 		}
 	}
