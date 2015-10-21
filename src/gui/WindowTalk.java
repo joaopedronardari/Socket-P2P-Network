@@ -3,7 +3,6 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-//import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -12,29 +11,14 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-import javax.jws.soap.SOAPBinding.Use;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-
-
-
-
-
-
-
-
-
-
-
-
 import socket.ReceiveMsg;
 import socket.Server;
-//import socket.SendMessage;
-//import socket.Server;
 import entity.User;
 
 public class WindowTalk extends JFrame implements ActionListener{
@@ -48,30 +32,33 @@ public class WindowTalk extends JFrame implements ActionListener{
 	DataOutputStream outToServer;
 	BufferedReader inFromServer;
 	public JTextArea conversa;
-	//
+	
 	public WindowTalk(User user,User selected){
 		super("Conversa com " +selected);
+		
 		Container window = getContentPane();
 		window.setLayout(new GridLayout(user.getListFriends().size(), 2,10,10));
+		
 		conversa = new JTextArea();
 		conversa.setEditable(false);
 		msg = new JTextArea();
+		
 		JButton button = new JButton("Enviar");
 		button.setVisible(true);
 		button.addActionListener(this);
+		
 		window.add(conversa);
 		window.add(msg);
 		window.add(new JScrollPane(conversa));
 		window.add(new JScrollPane(msg));
 		window.add(button);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(400, 200);
 		setVisible(true);
 		
 		this.user     = user;
 		this.selected = selected;
-		
-		
 	}	
 	
 	@Override

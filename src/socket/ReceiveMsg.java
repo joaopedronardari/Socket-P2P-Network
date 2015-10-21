@@ -1,7 +1,5 @@
 package socket;
 
-import java.awt.Event;
-import java.awt.print.Printable;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;

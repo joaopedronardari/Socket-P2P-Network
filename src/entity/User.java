@@ -82,7 +82,6 @@ public class User implements Comparable<User> {
 	
 	public void setIp(String x) {
 		this.ip = x;
-		
 	}
 	
 	public List<User> getListFriends(){
@@ -94,11 +93,13 @@ public class User implements Comparable<User> {
 		return this.userName.compareTo(user.getUserName());
 	}
 	
+	public String getStringStatus() {
+		return isConnect() ? "online" : "offline";
+	}
+	
 	@Override
 	public String toString(){
-		String status = "offline";
-		if(this.isConnect()) status = "online";
-		return this.getUserName() +"," +status;
+		return this.getUserName()+" - "+getStringStatus();
 	}
 	
 

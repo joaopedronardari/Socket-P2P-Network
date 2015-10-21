@@ -4,8 +4,7 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowListener;
+
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
@@ -31,52 +30,65 @@ import socket.Server;
 public class WindowListFriends extends JFrame implements ActionListener,ListSelectionListener{
 
 	private static final long serialVersionUID = 1L;
-	JList<User> friends;
+	JList<User> friendsList;
 	DefaultListModel<User> listModel;
-	JButton button;
-	User selected;
-	User usr;
-	ReceiveMsg listener;
+	JButton talkButton;
+	JButton logoutButton;
+	
+	User selectedUser;
+	User user;
+	ReceiveMsg receiveMsgListener;
 	
 	public WindowListFriends(User usr) {
-		super("Veja quem está online");
-		this.usr = usr;
+		super("Bem-Vindo " + usr.getUserName());
+		this.user = usr;
 		Container window = getContentPane();
-		window.setLayout(new GridLayout(usr.getListFriends().size()+2, 2,10,10));
 		
+		// Get ListFriends
 		List<User> listFriends = usr.getListFriends();
-		DefaultListModel<User> listModel = generateListModel(listFriends);
 		
-		listener = new ReceiveMsg(usr,listFriends);
-		listener.start();
+		// Set WindowLayout
+		window.setLayout(new GridLayout(listFriends.size()+2, 2,10,10));
 		
-		button = new JButton("Conversar");
-		button.setEnabled(false);
-		button.addActionListener(this);
+		// Create Talk Button
+		talkButton = new JButton("Conversar");
+		talkButton.setEnabled(false);
+		talkButton.addActionListener(this);
 
-		friends = new JList<User>(listModel);
-		friends.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		friends.addListSelectionListener(this);
+		// Create Logout Button
+		logoutButton = new JButton("Desconectar");
+		logoutButton.addActionListener(new Desconect());
+		
+		// Create List
+		listModel = generateListModel(listFriends);
+		friendsList = new JList<User>(listModel);
+		friendsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		friendsList.addListSelectionListener(this);
 
-		window.add(friends);
-		window.add(new JScrollPane(friends));
-		window.add(button);
-		JButton buttonOf = new JButton("Desconectar");
-		buttonOf.addActionListener(new Desconect());
-		window.add(buttonOf);
+		// Add Components
+		window.add(friendsList);
+		window.add(new JScrollPane(friendsList));
+		window.add(talkButton);
+		window.add(logoutButton);
+		
+		// Window Properties
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setSize(400, 250);
 		setVisible(true);
 		
+		// Create ReceiveMsg Thread
+		receiveMsgListener = new ReceiveMsg(usr,listFriends);
+		receiveMsgListener.start();
+		
+		// Create KeepAlive Thread
 		KeepAlive keepAlive = new KeepAlive(usr, this);
 		Thread t1 = new Thread(keepAlive);
 		t1.start();
-	
 	}
 
 	public DefaultListModel<User> generateListModel(List<User> listFriends) {
 		DefaultListModel<User> listModel = new DefaultListModel<User>();
-		for(int i = 0; i < usr.getListFriends().size(); i++){
+		for(int i = 0; i < user.getListFriends().size(); i++){
 			listModel.addElement(listFriends.get(i));
 		}
 		return listModel;
@@ -85,8 +97,8 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 	public void updateFriendsList(List<User> listFriends) {
 		listModel = generateListModel(listFriends);
 		
-		if (!friends.hasFocus()) {
-			friends.setModel(listModel);
+		if (!friendsList.hasFocus()) {
+			friendsList.setModel(listModel);
 		}
 	}
 	
@@ -95,7 +107,7 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 			Socket userSocket = new Socket(Server.ADDRES, Server.PORT);
 			PrintWriter outServer = new PrintWriter(userSocket.getOutputStream());
 			outServer.println("off");
-			outServer.println(usr.getUserName());
+			outServer.println(user.getUserName());
 			outServer.flush();
 			Scanner msgServer = new Scanner(userSocket.getInputStream());
 			if(msgServer.nextLine().equals("-1")){
@@ -106,28 +118,33 @@ public class WindowListFriends extends JFrame implements ActionListener,ListSele
 			e.printStackTrace();
 		}
 	}
-	
-	
 
-
+	/**
+	 * Select item from friendsList action 
+	 */
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		if(!e.getValueIsAdjusting()){
-			selected = friends.getSelectedValue();
-			if(selected != null && !button.isEnabled() && selected.isConnect()) button.setEnabled(true);
-			else if (selected == null || !selected.isConnect()) button.setEnabled(false); 
+			selectedUser = friendsList.getSelectedValue();
+			if(selectedUser != null && !talkButton.isEnabled() && selectedUser.isConnect()) talkButton.setEnabled(true);
+			else if (selectedUser == null || !selectedUser.isConnect()) talkButton.setEnabled(false); 
 		}
 	}
-	//
+	
+	/**
+	 * Click in "Conversar"
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		WindowTalk chat = new WindowTalk(usr,selected);
-		listener.add(chat);
+		WindowTalk chat = new WindowTalk(user,selectedUser);
+		receiveMsgListener.add(chat);
 		chat.setVisible(true);
 	}
 	
+	/**
+	 * Logout Action
+	 */
 	private class Desconect implements ActionListener{
-		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try{
