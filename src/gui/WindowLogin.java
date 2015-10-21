@@ -89,7 +89,7 @@ public class WindowLogin extends JFrame implements ActionListener{
 					int size = Integer.parseInt(msgServer.nextLine());
 					user.setConnect(true);
 					for( int j = 0; j < size; j++){
-						String[] parse = msgServer.nextLine().split(",");
+						String[] parse = msgServer.nextLine().split(" - ");
 						User friend = new User(parse[0]);
 						if(parse[1].equals("offline")){
 							friend.setConnect(false);
